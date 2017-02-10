@@ -1,0 +1,16 @@
+com/scg/domain/ClientAccount.class
+com/scg/domain/Skill.class
+com/scg/domain/InvoiceLineItem.class
+com/scg/domain/ConsultantTime.class
+com/scg/domain/NonBillableAccount.class
+com/scg/util/ListFactory.class
+com/scg/domain/InvoiceFooter.class
+com/scg/util/Name.class
+com/scg/domain/TimeCard.class
+com/scg/util/StateCode.class
+com/scg/domain/Consultant.class
+com/scg/domain/Invoice.class
+app/Assignment03.class
+com/scg/domain/InvoiceHeader.class
+com/scg/util/Address.class
+com/scg/domain/Account.class

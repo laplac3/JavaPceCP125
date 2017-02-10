@@ -1,0 +1,12 @@
+com/scg/domain/TestInvoiceHeader.class
+com/scg/domain/TestInvoice.class
+com/scg/util/TestAddress.class
+app/TestRunner.class
+com/scg/domain/TestConsultant.class
+com/scg/domain/TestTimeCard$1.class
+com/scg/domain/TestConsultantTime.class
+com/scg/util/NameTest.class
+com/scg/domain/TestClientAccount.class
+com/scg/domain/TestInvoiceLineItem.class
+com/scg/domain/TestTimeCard.class
+com/scg/domain/TestInvoiceFooter.class

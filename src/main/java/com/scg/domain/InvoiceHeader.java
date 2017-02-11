@@ -75,10 +75,8 @@ final class InvoiceHeader {
 	}
 	
 	public String toSting() {
-
-		return String.format("%s %n%2$s %n%3$s, %4$s %5$s %n%n%6$s %n%7$s %n%8$s %n%9$s %n%n%10$s %11$s %n%12$s %13$s %n%14$s %n%15$s",
-				businessName, businessAddress.getStreetNumbers(), businessAddress.getCity(),
-				businessAddress.getState(),businessAddress.getPostalCode(), line5, client.getName(),
+		return String.format("%s %n%2$s %n%n%3$s %n%4$s %n%5$s %n%6$s %n%n%7$s %8$s %n%9$s %10$s %n%11$s %n%12$s",
+				businessName, businessAddress.toString(), line5, client.getName(),
 				client.getAddress(),  client.getContact(), line7, invoiceForMonth.format(invoiceForMonth1Formatter),line8,
 				invoiceDate.format(invoice1Formatter), str4, dashes);
 	}

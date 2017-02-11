@@ -3,15 +3,11 @@ package com.scg.domain;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.attribute.AclEntry.Builder;
 import java.text.NumberFormat;
 
 import com.scg.util.Address;
@@ -50,6 +46,12 @@ public final class Invoice {
 	 * List of line items.
 	 */
 	private List<InvoiceLineItem> invoiceLineItems = new ArrayList<>();
+	
+	private String businessName;
+	private String businessStreet;
+	private String businessCity;
+	private String businessZip;
+	private StateCode businessState;
 
 	/**
 	 * Construct an invoice for a client. The period is set from the beginning of the month to the end.
@@ -140,12 +142,37 @@ public final class Invoice {
 	 * @return Returns a string.
 	 */
 	public String toReportString() {
+	
+		try {
+		Scanner scan = new Scanner( new File( "src/main/resources/invoice.properties"));
 		
-		InvoiceFooter footer = new InvoiceFooter("name");
+		
+			while ( scan.hasNextLine() ) {
+				String lineStr = scan.nextLine();
+				int start = lineStr.indexOf("=")+1;
+				if ( lineStr.contains("name") ) 
+					businessName = lineStr.substring(start, lineStr.length());
+				else if ( lineStr.contains("street"))
+					businessStreet = lineStr.substring(start, lineStr.length());
+				else if ( lineStr.contains("city")) 
+					businessCity = lineStr.substring(start, lineStr.length());
+				else if ( lineStr.contains("zip"))
+					businessZip = lineStr.substring(start, lineStr.length());
+				else
+					businessState = StateCode.valueOf(lineStr.substring(15,lineStr.length()));
+			}
+			scan.close();
+		} catch ( IOException ex ){
+			ex.printStackTrace();
+		}
+		
+		
+		
+		InvoiceFooter footer = new InvoiceFooter(businessName);
 		LocalDate invoiceForMonth = LocalDate.of(invoiceYear,invoiceMonth.getValue(),1);
 		LocalDate invoiceDate = LocalDate.now();
-		InvoiceHeader header = new InvoiceHeader("name",
-				new Address("street","city",StateCode.CA,"zipCode"), client, invoiceDate , invoiceForMonth  );
+		InvoiceHeader header = new InvoiceHeader(businessName,
+				new Address(businessStreet,businessCity,businessState,businessZip), client, invoiceDate , invoiceForMonth  );
 
 		StringBuilder builder = new StringBuilder();
 		String str1 = header.toSting();

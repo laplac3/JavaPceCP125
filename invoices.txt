@@ -1,6 +1,6 @@
-name 
-street 
-city, CA zipCode 
+The Small Consulting Group 
+1616 Index Ct. 
+Renton, WA 98058 
 
 Invoice For: 
 Acme Industries 
@@ -9,7 +9,7 @@ Redmond, WA 98055
 Coyote, Wiley  
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 10, 2017 
+Invoice Date: Feb 11, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------
@@ -19,12 +19,12 @@ Date        Consultant                    Skill                 Hours   Charge
 
 total                                                               16    2,400.00
 
-name                                                                  Page:      1 
+The Small Consulting Group                                            Page:      1 
 ==================================================================================
 
-name 
-street 
-city, CA zipCode 
+The Small Consulting Group 
+1616 Index Ct. 
+Renton, WA 98058 
 
 Invoice For: 
 FooBar Enterprises 
@@ -33,7 +33,7 @@ Silicone Gulch, CA 94105
 Sam, Yosemite  
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 10, 2017 
+Invoice Date: Feb 11, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------
@@ -44,12 +44,12 @@ Date        Consultant                    Skill                 Hours   Charge
 03/08/06    Coder, Carl                   Software Engineer          8     1200.00
 03/09/06    Coder, Carl                   Software Engineer         12     1800.00
 
-name                                                                  Page:      1 
+The Small Consulting Group                                            Page:      1 
 ==================================================================================
 
-name 
-street 
-city, CA zipCode 
+The Small Consulting Group 
+1616 Index Ct. 
+Renton, WA 98058 
 
 Invoice For: 
 FooBar Enterprises 
@@ -58,7 +58,7 @@ Silicone Gulch, CA 94105
 Sam, Yosemite  
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 10, 2017 
+Invoice Date: Feb 11, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------
@@ -68,12 +68,12 @@ Date        Consultant                    Skill                 Hours   Charge
 03/10/06    Architect, Ann S.             System Architect           8     1600.00
 03/11/06    Architect, Ann S.             System Architect           8     1600.00
 
-name                                                                  Page:      2 
+The Small Consulting Group                                            Page:      2 
 ==================================================================================
 
-name 
-street 
-city, CA zipCode 
+The Small Consulting Group 
+1616 Index Ct. 
+Renton, WA 98058 
 
 Invoice For: 
 FooBar Enterprises 
@@ -82,7 +82,7 @@ Silicone Gulch, CA 94105
 Sam, Yosemite  
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 10, 2017 
+Invoice Date: Feb 11, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------
@@ -92,6 +92,6 @@ Date        Consultant                    Skill                 Hours   Charge
 
 total                                                              108   19,400.00
 
-name                                                                  Page:      3 
+The Small Consulting Group                                            Page:      3 
 ==================================================================================
 

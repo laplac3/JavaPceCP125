@@ -86,11 +86,11 @@ public class TestTimeCard {
 				String skill = a.getSkillType().getTitle();
 				String hoursPad = "";
 				if ( hours.length() == 1)
-					hoursPad = TimeCard.pad(dateStr," ",14);
+					hoursPad = TimeCard.pad(dateStr," ",15);
 				else
-					hoursPad = TimeCard.pad(dateStr," ",13);
-				String skillPad = TimeCard.pad(hours + hoursPad, " ",8);
-				String datePad = TimeCard.pad(name, " ",31);
+					hoursPad = TimeCard.pad(dateStr," ",14);
+				String skillPad = TimeCard.pad(hours + hoursPad, " ",11);
+				String datePad = TimeCard.pad(name, " ",39);
 				String str = String.format(fmt, name, datePad, dateStr,  hoursPad,hours, skillPad, skill);
 				strFinalExpected = strFinalExpected.concat(str);
 			}
@@ -114,11 +114,11 @@ public class TestTimeCard {
 				String skill = a.getSkillType().getTitle();
 				String hoursPad = "";
 				if ( hours.length() == 1)
-					hoursPad = TimeCard.pad(dateStr," ",14);
+					hoursPad = TimeCard.pad(dateStr," ",15);
 				else
-					hoursPad = TimeCard.pad(dateStr," ",13);
-				String skillPad = TimeCard.pad(hours + hoursPad, " ",8);
-				String datePad = TimeCard.pad(name, " ",31);
+					hoursPad = TimeCard.pad(dateStr," ",14);
+				String skillPad = TimeCard.pad(hours + hoursPad, " ",11);
+				String datePad = TimeCard.pad(name, " ",39);
 				String str = String.format(fmt, name, datePad, dateStr,  hoursPad,hours, skillPad, skill);
 				strFinalExpected2 = strFinalExpected2.concat(str);
 			}
@@ -128,13 +128,13 @@ public class TestTimeCard {
 		//test reportToString
 		String strFinalExpected3 = "";
 		//header
-		String divider = TimeCard.pad("","=",73); 
+		String divider = TimeCard.pad("","=",82); 
 		String fmt1 = "%s %n";
 		String str1 = String.format(fmt1, divider);
 		
 		//consultant and starting day line
 		Name name = jamesStewart.getName();
-		String namePad = TimeCard.pad(name.toString()," ",33 );
+		String namePad = TimeCard.pad(name.toString()," ",42 );
 		String fmt2 ="Consultant: %s %2$s";
 		String str2 = String.format(fmt2, name, namePad);
 		
@@ -150,13 +150,13 @@ public class TestTimeCard {
 		String msg2 = "Date";
 		String msg3 = "Hours";
 		String msg4 = "Skill";
-		String fmt4 = "%n%s %n%2$s %3$30s %4$13s %5$7s %n";
+		String fmt4 = "%n%s %n%2$s %3$37s %4$13s %5$7s %n";
 		String str4 = String.format(fmt4,msg,msg1,msg2,msg3, msg4);
 		
-		String divider2 = new String(new char[30]).replace("\0", "-");
+		String divider2 = new String(new char[37]).replace("\0", "-");
 		String divider3 = new String(new char[10]).replace("\0", "-");
 		String divider4 = new String(new char[5]).replace("\0", "-");
-		String divider5 = new String(new char[17]).replace("\0", "-");
+		String divider5 = new String(new char[20]).replace("\0", "-");
 		String fmt5 = "%s    %2$s   %3$s   %4$s %n";
 		String str5 = String.format(fmt5, divider2, divider3, divider4,divider5);
 
@@ -171,7 +171,7 @@ public class TestTimeCard {
 		String msg7 = "Date";
 		String msg8 = "Hours";
 		String msg9 = "Skill";
-		String fmt6 = "%n%s %n%2$s %3$30s %4$13s %5$7s %n";
+		String fmt6 = "%n%s %n%2$s %3$37s %4$13s %5$7s %n";
 		String str6 = String.format(fmt6,msg5,msg6,msg7,msg8, msg9);
 	
 		String fmt7 = "%s    %2$s   %3$s   %4$s %n";
@@ -187,7 +187,7 @@ public class TestTimeCard {
 		int nBHours = expectedNonTotalBillableHours;
 		String msg13 = "Total hours:";
 		int tHours = expectedTotalHours;
-		String fmt8 = "%n%s %n%2$s %3$36s %n%4$s %5$32s %n%6$s %7$39s%n";
+		String fmt8 = "%n%s %n%2$s %3$43s %n%4$s %5$39s %n%6$s %7$46s%n";
 		String str8 = String.format(fmt8, msg10, msg11, bHours, msg12, nBHours, msg13, tHours);
 		
 		strFinalExpected3 = strFinalExpected3.concat(str8).concat(str1);

@@ -9,11 +9,10 @@ Redmond, WA 98055
 Coyote, Wiley  
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 11, 2017 
+Invoice Date: Feb 13, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------
-
 03/06/06    Coder, Carl                   Software Engineer          8     1200.00
 03/07/06    Coder, Carl                   Software Engineer          8     1200.00
 
@@ -33,11 +32,10 @@ Silicone Gulch, CA 94105
 Sam, Yosemite  
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 11, 2017 
+Invoice Date: Feb 13, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------
-
 03/01/06    Coder, Carl                   Software Engineer          8     1200.00
 03/02/06    Coder, Carl                   Software Engineer          8     1200.00
 03/03/06    Coder, Carl                   Software Engineer          8     1200.00
@@ -58,7 +56,7 @@ Silicone Gulch, CA 94105
 Sam, Yosemite  
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 11, 2017 
+Invoice Date: Feb 13, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------
@@ -82,7 +80,7 @@ Silicone Gulch, CA 94105
 Sam, Yosemite  
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 11, 2017 
+Invoice Date: Feb 13, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------

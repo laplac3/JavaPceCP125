@@ -47,10 +47,25 @@ public final class Invoice {
 	 */
 	private List<InvoiceLineItem> invoiceLineItems = new ArrayList<>();
 	
+	/**
+	 * Name of business.
+	 */
 	private String businessName;
+	/**
+	 * Street of business.
+	 */
 	private String businessStreet;
+	/**
+	 * City of business.
+	 */
 	private String businessCity;
+	/**
+	 * postal code of business.
+	 */
 	private String businessZip;
+	/**
+	 * State code of business.
+	 */
 	private StateCode businessState;
 
 	/**
@@ -184,7 +199,7 @@ public final class Invoice {
 			int mod = i % 5;
 				if (i == 0 ) {
 					builder = builder.append(str1)
-							.append(System.getProperty("line.separator")).append(a.toString())
+							.append(a.toString())
 							.append(System.getProperty("line.separator"));
 				} else if ( mod == 0 ) {
 					builder = builder.append(str3)

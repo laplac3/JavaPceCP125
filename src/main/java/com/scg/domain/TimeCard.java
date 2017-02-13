@@ -22,11 +22,29 @@ import com.scg.util.Name;
  */
 public final class TimeCard {
 	
+	/**
+	 * The consultant for the time card.
+	 */
 	private Consultant consultant;
+	/**
+	 * The week starting day.
+	 */
 	private java.time.LocalDate weekStartingDay;
+	/**
+	 * Total billable hours.
+	 */
 	private int totalBillableHours;
+	/**
+	 * Total nonbillable hours.
+	 */
 	private int totalNonBillableHours;
+	/**
+	 * Total hours billable and non.
+	 */
 	private int totalHours;
+	/**
+	 * List of consulting hours.
+	 */
 	private List<ConsultantTime> consultingHours = new ArrayList<>();
 
 	/**
@@ -119,6 +137,13 @@ public final class TimeCard {
 		return "consultant " + consultant.getName().toString();
 	}
 
+	/**
+	 * Pad a string for alignment. 
+	 * @param strToPad - The string to pad.
+	 * @param charToPadWith - The string to pad with.
+	 * @param maxNumb - Max length of string with pad.
+	 * @return Returns a string to pad with.
+	 */
 	public static String pad(String strToPad, String charToPadWith, int maxNumb) {
 		int padNumb = maxNumb - strToPad.length();
 		String pad = new String(new char[padNumb]).replace("\0", charToPadWith);
@@ -127,6 +152,13 @@ public final class TimeCard {
 		return pad;
 	}
 	
+	/**
+	 * Concatenates a list of hours either billable or not.
+	 * @param strFinal - The string to concatenate the hours.
+	 * @param consultingHours - The hours to concatenate.
+	 * @param bool - Boolean value.  If set true adds billable hours if set false adds nonbillable hours.
+	 * @return Returns the strFinal with hours concatenated to.
+	 */
 	public static String stringBillableOrNon(String strFinal, List<ConsultantTime> consultingHours, boolean bool){
 			for (ConsultantTime a : consultingHours) {
 				if ( a.getAccount().isBillable() == bool) {
@@ -141,11 +173,11 @@ public final class TimeCard {
 					String skill = a.getSkillType().getTitle();
 					String hoursPad = "";
 					if ( hours.length() == 1)
-						hoursPad = pad(dateStr," ",14);
+						hoursPad = pad(dateStr," ",15);
 					else
-						hoursPad = pad(dateStr," ",13);
-					String skillPad = pad(hours + hoursPad, " ",8);
-					String datePad = pad(name, " ",31);
+						hoursPad = pad(dateStr," ",14);
+					String skillPad = pad(hours + hoursPad, " ",11);
+					String datePad = pad(name, " ",39);
 					String str = String.format(fmt, name, datePad, dateStr,  hoursPad,hours, skillPad, skill);
 					strFinal = strFinal.concat(str);
 				}
@@ -161,13 +193,13 @@ public final class TimeCard {
 		
 		String strFinal = "";
 		//header
-		String divider = pad("","=",73); 
+		String divider = pad("","=",82); 
 		String fmt1 = "%s %n";
 		String str1 = String.format(fmt1, divider);
 		
 		//consultant and starting day line
 		Name name = consultant.getName();
-		String namePad = pad(name.toString()," ",33 );
+		String namePad = pad(name.toString()," ",42 );
 		String fmt2 ="Consultant: %s %2$s";
 		String str2 = String.format(fmt2, name, namePad);
 		
@@ -183,13 +215,13 @@ public final class TimeCard {
 		String msg2 = "Date";
 		String msg3 = "Hours";
 		String msg4 = "Skill";
-		String fmt4 = "%n%s %n%2$s %3$30s %4$13s %5$7s %n";
+		String fmt4 = "%n%s %n%2$s %3$37s %4$13s %5$7s %n";
 		String str4 = String.format(fmt4,msg,msg1,msg2,msg3, msg4);
 		
-		String divider2 = new String(new char[30]).replace("\0", "-");
+		String divider2 = new String(new char[37]).replace("\0", "-");
 		String divider3 = new String(new char[10]).replace("\0", "-");
 		String divider4 = new String(new char[5]).replace("\0", "-");
-		String divider5 = new String(new char[17]).replace("\0", "-");
+		String divider5 = new String(new char[20]).replace("\0", "-");
 		String fmt5 = "%s    %2$s   %3$s   %4$s %n";
 		String str5 = String.format(fmt5, divider2, divider3, divider4,divider5);
 
@@ -204,7 +236,7 @@ public final class TimeCard {
 		String msg7 = "Date";
 		String msg8 = "Hours";
 		String msg9 = "Skill";
-		String fmt6 = "%n%s %n%2$s %3$30s %4$13s %5$7s %n";
+		String fmt6 = "%n%s %n%2$s %3$37s %4$13s %5$7s %n";
 		String str6 = String.format(fmt6,msg5,msg6,msg7,msg8, msg9);
 	
 		String fmt7 = "%s    %2$s   %3$s   %4$s %n";
@@ -220,7 +252,7 @@ public final class TimeCard {
 		int nBHours = totalNonBillableHours;
 		String msg13 = "Total hours:";
 		int tHours = totalHours;
-		String fmt8 = "%n%s %n%2$s %3$36s %n%4$s %5$32s %n%6$s %7$39s%n";
+		String fmt8 = "%n%s %n%2$s %3$43s %n%4$s %5$39s %n%6$s %7$46s%n";
 		String str8 = String.format(fmt8, msg10, msg11, bHours, msg12, nBHours, msg13, tHours);
 		
 		strFinal = strFinal.concat(str8).concat(str1);		

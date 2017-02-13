@@ -6,9 +6,21 @@ import java.util.Calendar;
 
 public final class InvoiceLineItem {
 
+	/**
+	 * Date of line item.
+	 */
 	private LocalDate date;
+	/**
+	 * Consultant of line item.
+	 */
 	private Consultant consultant;
+	/**
+	 * Skill type for line item.
+	 */
 	private Skill skill;
+	/**
+	 * Number of hours for line item.
+	 */
 	private int hours;
 
 	/**

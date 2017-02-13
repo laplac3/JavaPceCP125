@@ -42,6 +42,10 @@ public enum Skill {
 		this.title = title;
 	}
 	
+	/**
+	 * Getter for title.
+	 * @return Returns the title of this skill type.
+	 */
 	public String getTitle() {
 		return this.title;
 	}

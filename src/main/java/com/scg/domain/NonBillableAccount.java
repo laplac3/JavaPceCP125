@@ -24,11 +24,6 @@ public enum NonBillableAccount implements Account{
 		this.title = title;
 	}
 	
-	public String getTitle() {
-		return this.title;
-	}
-
-
 	@Override
 	public boolean isBillable() {
 		return false;

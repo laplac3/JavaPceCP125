@@ -71,7 +71,7 @@ public final class Invoice {
 	/**
 	 * Number of lines per page.
 	 */
-    private final int itemsPerPage = 5:
+    private final int itemsPerPage = 5;
 	/**
 	 * Construct an invoice for a client. The period is set from the beginning of the month to the end.
 	 * @param client - Client for this invoice.
@@ -162,6 +162,8 @@ public final class Invoice {
 	 */
 	public String toReportString() {
 	
+	
+	//Russ used a static try stream ClassLoader .getSystemAsStream(), Propertiess() and the getProperty(). Also made this a seprate.
 		try {
 		Scanner scan = new Scanner( new File( "src/main/resources/invoice.properties"));
 		

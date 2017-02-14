@@ -31,6 +31,10 @@ public final class InvoiceLineItem {
 	 * @param hours hours for this line item
 	 */
 	public InvoiceLineItem(LocalDate date, Consultant consultant, Skill skill, int hours) {
+		
+		if ( hours <= 0 ) {
+			throw new IllegalArgumentException( "Hours cannot be negative or zero");
+		}
 		this.date = date;
 		this.consultant = consultant;
 		this.skill = skill;

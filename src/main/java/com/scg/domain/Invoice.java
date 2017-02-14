@@ -69,6 +69,10 @@ public final class Invoice {
 	private StateCode businessState;
 
 	/**
+	 * Number of lines per page.
+	 */
+    private final int itemsPerPage = 5:
+	/**
 	 * Construct an invoice for a client. The period is set from the beginning of the month to the end.
 	 * @param client - Client for this invoice.
 	 * @param invoiceMonth - Month for this invoice.
@@ -196,7 +200,7 @@ public final class Invoice {
 		int i=0;
 		for ( InvoiceLineItem a : invoiceLineItems ){
 
-			int mod = i % 5;
+			int mod = i % itemsPerPage;
 				if (i == 0 ) {
 					builder = builder.append(str1)
 							.append(a.toString())

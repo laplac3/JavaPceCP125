@@ -1,13 +1,16 @@
 package com.scg.domain;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Scanner;
-import java.io.File;
-import java.io.IOException;
+import java.util.Properties;
+//import java.util.Scanner;
+//import java.io.File;
+
 import java.text.NumberFormat;
 
 import com.scg.util.Address;
@@ -46,28 +49,62 @@ public final class Invoice {
 	 * List of line items.
 	 */
 	private List<InvoiceLineItem> invoiceLineItems = new ArrayList<>();
-	
+
+    /** Name of property file containing invoicing business info. */
+    private static final String PROP_FILE_NAME = "/invoice.properties";
+
+    /** Property containing the invoicing business name. */
+    private static final String BUSINESS_NAME_PROP = "business.name";
+
+    /** Property containing the invoicing business street address. */
+    private static final String BUSINESS_STREET_PROP = "business.street";
+
+    /** Property containing the invoicing business city. */
+    private static final String BUSINESS_CITY_PROP = "business.city";
+
+    /** Property containing the invoicing business state. */
+    private static final String BUSINESS_STATE_PROP = "business.state";
+
+    /** Property containing the invoicing business zip or postal code. */
+    private static final String BUSINESS_ZIP_PROP = "business.zip";
+    
+    private static final String NA = "N/A";
+    
 	/**
 	 * Name of business.
 	 */
-	private String businessName;
+	private static final String businessName;
 	/**
 	 * Street of business.
 	 */
-	private String businessStreet;
+	private static final String businessStreet;
 	/**
 	 * City of business.
 	 */
-	private String businessCity;
+	private static final String businessCity;
 	/**
 	 * postal code of business.
 	 */
-	private String businessZip;
+	private static final String businessZip;
 	/**
 	 * State code of business.
 	 */
-	private StateCode businessState;
+	private static final String businessState;
 
+	static {
+		final Properties invoiceProps = new Properties();
+		try ( InputStream in = Invoice.class.getResourceAsStream(PROP_FILE_NAME)) {
+			invoiceProps.load(in);
+		} catch ( final IOException e) {
+			System.out.printf("Unable to read properties file", e);
+		}
+		businessName = invoiceProps.getProperty(BUSINESS_NAME_PROP, NA );
+		businessStreet = invoiceProps.getProperty(BUSINESS_STREET_PROP, NA );
+		businessCity = invoiceProps.getProperty(BUSINESS_CITY_PROP, NA );
+		businessZip = invoiceProps.getProperty(BUSINESS_ZIP_PROP, NA );
+		businessState = invoiceProps.getProperty(BUSINESS_STATE_PROP, NA );
+	}
+	
 	/**
 	 * Number of lines per page.
 	 */
@@ -164,7 +201,7 @@ public final class Invoice {
 	
 	
 	//Russ used a static try stream ClassLoader .getSystemAsStream(), Propertiess() and the getProperty(). Also made this a seprate.
-		try {
+/*		try {
 		Scanner scan = new Scanner( new File( "src/main/resources/invoice.properties"));
 		
 		
@@ -186,14 +223,14 @@ public final class Invoice {
 		} catch ( IOException ex ){
 			ex.printStackTrace();
 		}
-		
+	*/	
 		
 		
 		InvoiceFooter footer = new InvoiceFooter(businessName);
 		LocalDate invoiceForMonth = LocalDate.of(invoiceYear,invoiceMonth.getValue(),1);
 		LocalDate invoiceDate = LocalDate.now();
 		InvoiceHeader header = new InvoiceHeader(businessName,
-				new Address(businessStreet,businessCity,businessState,businessZip), client, invoiceDate , invoiceForMonth  );
+				new Address(businessStreet,businessCity,StateCode.valueOf(businessState),businessZip), client, invoiceDate , invoiceForMonth  );
 
 		StringBuilder builder = new StringBuilder();
 		String str1 = header.toSting();

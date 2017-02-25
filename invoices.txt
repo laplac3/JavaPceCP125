@@ -6,15 +6,15 @@ Invoice For:
 Acme Industries 
 1616 Index Ct. 
 Redmond, WA 98055 
-Coyote, Wiley  
+Coyote, Wiley N/A 
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 21, 2017 
+Invoice Date: Feb 25, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------
-03/06/06    Coder, Carl                   Software Engineer          8     1200.00
-03/07/06    Coder, Carl                   Software Engineer          8     1200.00
+03/06/06    Coder, Carl N/A               Software Engineer          8     1200.00
+03/07/06    Coder, Carl N/A               Software Engineer          8     1200.00
 
 total                                                               16    2,400.00
 
@@ -29,18 +29,18 @@ Invoice For:
 FooBar Enterprises 
 1024 Kilobyte Dr. 
 Silicone Gulch, CA 94105 
-Sam, Yosemite  
+Sam, Yosemite N/A 
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 21, 2017 
+Invoice Date: Feb 25, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------
-03/01/06    Coder, Carl                   Software Engineer          8     1200.00
-03/02/06    Coder, Carl                   Software Engineer          8     1200.00
-03/03/06    Coder, Carl                   Software Engineer          8     1200.00
-03/08/06    Coder, Carl                   Software Engineer          8     1200.00
-03/09/06    Coder, Carl                   Software Engineer         12     1800.00
+03/01/06    Coder, Carl N/A               Software Engineer          8     1200.00
+03/02/06    Coder, Carl N/A               Software Engineer          8     1200.00
+03/03/06    Coder, Carl N/A               Software Engineer          8     1200.00
+03/08/06    Coder, Carl N/A               Software Engineer          8     1200.00
+03/09/06    Coder, Carl N/A               Software Engineer         12     1800.00
 
 The Small Consulting Group                                            Page:      1 
 ==================================================================================
@@ -53,10 +53,10 @@ Invoice For:
 FooBar Enterprises 
 1024 Kilobyte Dr. 
 Silicone Gulch, CA 94105 
-Sam, Yosemite  
+Sam, Yosemite N/A 
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 21, 2017 
+Invoice Date: Feb 25, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------
@@ -77,10 +77,10 @@ Invoice For:
 FooBar Enterprises 
 1024 Kilobyte Dr. 
 Silicone Gulch, CA 94105 
-Sam, Yosemite  
+Sam, Yosemite N/A 
 
 Invoice For Month of: March 2006 
-Invoice Date: Feb 21, 2017 
+Invoice Date: Feb 25, 2017 
 
 Date        Consultant                    Skill                 Hours   Charge 
 ----------  ----------------------------  --------------------  ------  ----------

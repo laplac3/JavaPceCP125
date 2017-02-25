@@ -48,7 +48,7 @@ public final class Invoice {
 	/**
 	 * List of line items.
 	 */
-	private List<InvoiceLineItem> invoiceLineItems = new ArrayList<>();
+	private List<InvoiceLineItem> lineItems;
 
     /** Name of property file containing invoicing business info. */
     private static final String PROP_FILE_NAME = "/invoice.properties";
@@ -109,6 +109,7 @@ public final class Invoice {
 	 * Number of lines per page.
 	 */
     private final int itemsPerPage = 5;
+	private LocalDate invoiceDate;
 	/**
 	 * Construct an invoice for a client. The period is set from the beginning of the month to the end.
 	 * @param client - Client for this invoice.
@@ -117,8 +118,9 @@ public final class Invoice {
 	 */
 	public Invoice(ClientAccount client, Month invoiceMonth, int invoiceYear) {
 		this.client = client;
-		this.invoiceMonth = invoiceMonth;
-		this.invoiceYear = invoiceYear;
+		this.lineItems = new ArrayList<InvoiceLineItem>();
+		this.invoiceDate = LocalDate.now();
+		this.startDate = LocalDate.of(invoiceYear, invoiceMonth, 1);
 	}
 
 	/**
@@ -167,11 +169,9 @@ public final class Invoice {
 	 * @param lineItem - the line item to add.
 	 */
 	public void addLineItem(InvoiceLineItem lineItem) {
-		if ( invoiceMonth == lineItem.getDate().getMonth() ) {
-			invoiceLineItems.add(lineItem);
+			lineItems.add(lineItem);
 			totalHours += lineItem.getHours();
 			totalCharges += lineItem.getCharge();
-		}
 	}
 	
 	/**
@@ -180,17 +180,19 @@ public final class Invoice {
 	 * @param timeCard - The TimeCard potentially containing line items for this Invoices client.
 	 */
 	public void extractLineItems(TimeCard timeCard) {
-
-		for ( ConsultantTime time : timeCard.getBillableHoursForClients( client.getName() ) ) 
-			addLineItem(new InvoiceLineItem(time.getDate(), timeCard.getConsultant(), time.getSkillType(), time.getHours() ) );
-		
+		final List<ConsultantTime> billableHoursList = timeCard.getBillableHoursForClients(client.getName());
+		for ( final ConsultantTime time : billableHoursList ) {
+			final LocalDate currentDate = time.getDate();
+			if (currentDate.getMonth() == startDate.getMonth())
+				addLineItem(new InvoiceLineItem(currentDate, timeCard.getConsultant(), time.getSkillType(), time.getHours() ) );
+		}
 	}
 
 	@Override
 	public String toString() {
 		return "Invoice [client=" + client + ", invoiceMonth=" + invoiceMonth + ", invoiceYear=" + invoiceYear
 				+ ", startDate=" + startDate + ", totalHours=" + totalHours + ", totalCharges=" + totalCharges
-				+ ", invoiceLineItems=" + invoiceLineItems + "]";
+				+ ", lineItems=" + lineItems + "]";
 	}
 
 	/**
@@ -198,46 +200,18 @@ public final class Invoice {
 	 * @return Returns a string.
 	 */
 	public String toReportString() {
-	
-	
-	//Russ used a static try stream ClassLoader .getSystemAsStream(), Propertiess() and the getProperty(). Also made this a seprate.
-/*		try {
-		Scanner scan = new Scanner( new File( "src/main/resources/invoice.properties"));
-		
-		
-			while ( scan.hasNextLine() ) {
-				String lineStr = scan.nextLine();
-				int start = lineStr.indexOf("=")+1;
-				if ( lineStr.contains("name") ) 
-					businessName = lineStr.substring(start, lineStr.length());
-				else if ( lineStr.contains("street"))
-					businessStreet = lineStr.substring(start, lineStr.length());
-				else if ( lineStr.contains("city")) 
-					businessCity = lineStr.substring(start, lineStr.length());
-				else if ( lineStr.contains("zip"))
-					businessZip = lineStr.substring(start, lineStr.length());
-				else
-					businessState = StateCode.valueOf(lineStr.substring(15,lineStr.length()));
-			}
-			scan.close();
-		} catch ( IOException ex ){
-			ex.printStackTrace();
-		}
-	*/	
-		
 		
 		InvoiceFooter footer = new InvoiceFooter(businessName);
-		LocalDate invoiceForMonth = LocalDate.of(invoiceYear,invoiceMonth.getValue(),1);
-		LocalDate invoiceDate = LocalDate.now();
 		InvoiceHeader header = new InvoiceHeader(businessName,
-				new Address(businessStreet,businessCity,StateCode.valueOf(businessState),businessZip), client, invoiceDate , invoiceForMonth  );
+				new Address(businessStreet,businessCity,StateCode.valueOf(businessState),businessZip),
+				client, invoiceDate , startDate );
 
 		StringBuilder builder = new StringBuilder();
 		String str1 = header.toSting();
 		String str3 = footer.toString();
 
 		int i=0;
-		for ( InvoiceLineItem a : invoiceLineItems ){
+		for ( InvoiceLineItem a : lineItems ){
 
 			int mod = i % itemsPerPage;
 				if (i == 0 ) {

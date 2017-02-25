@@ -20,7 +20,7 @@ import com.scg.util.Name;
  * 
  *Encapsulates a time card capable of storing consultant's billable and nonbillable hours for a week.
  */
-public final class TimeCard {
+public final class TimeCard implements Comparable<TimeCard> {
 	
 	/**
 	 * The consultant for the time card.
@@ -185,6 +185,19 @@ public final class TimeCard {
 		return strFinal;
 			
 	}
+	
+	public int compareTo(TimeCard other ) {
+		int diff = 0;
+		if ( this != other ) {
+			if ( ( diff = this.getWeekStartingDay().compareTo(other.getWeekStartingDay())) == 0)
+			if ((diff =  this.getConsultant().compareTo(other.getConsultant())) == 0 )
+			if (( diff = Integer.compare(this.totalHours, other.totalHours)) == 0 )
+			if (( diff = Integer.compare(this.totalBillableHours, other.totalBillableHours)) == 0)
+			diff = Integer.compare(this.totalNonBillableHours, other.totalNonBillableHours);
+		}
+		return diff;
+	}
+	
 	/**
 	 * Creates a string representation of the time card suitable to print.
 	 * @return Returns this time card as a formatted string. 
@@ -258,5 +271,5 @@ public final class TimeCard {
 		strFinal = strFinal.concat(str8).concat(str1);		
 		return strFinal;
 	}
-	//Git test
+
 }

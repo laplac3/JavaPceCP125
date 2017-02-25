@@ -7,7 +7,7 @@ import com.scg.util.Name;
  * @author neil
  *Encapsulates the information for a billable account.
  */
-public final class ClientAccount implements Account {
+public final class ClientAccount implements Account, Comparable<ClientAccount> {
 
 	/**
 	 * Name of the client
@@ -96,6 +96,17 @@ public final class ClientAccount implements Account {
 
 	public boolean isBillable() {
 		return true;
+	}
+
+	@Override
+	public int compareTo(ClientAccount other ) {
+		int diff = 0;
+		if ( this != other ) {
+			if ((diff = this.contact.compareTo(other.contact)) == 0 )
+			if (( diff = this.name.compareTo(other.name)) == 0 )
+			diff = this.address.compareTo(other.address);
+		}
+		return diff;
 	}
 
 }

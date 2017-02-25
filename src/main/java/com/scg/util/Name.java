@@ -1,6 +1,6 @@
 package com.scg.util;
 
-public final class Name {
+public final class Name implements Comparable<Name> {
 	
 	private String lastName;
 	private String firstName;
@@ -13,7 +13,7 @@ public final class Name {
 	}
 
 	public Name(String lastName, String firstName) {
-		this(lastName,firstName,"");
+		this(lastName,firstName,"N/A");
 	}
 	
 	public Name() {
@@ -89,6 +89,18 @@ public final class Name {
 		} else if (!middleName.equals(other.middleName))
 			return false;
 		return true;
+	}
+
+	@Override
+	public int compareTo(Name other) {
+		int diff = 0;
+		if( this != other) {
+			if (( diff = this.lastName.compareTo(other.lastName)) == 0 )
+			if (( diff = this.firstName.compareTo(other.firstName)) == 0 )
+			diff = this.middleName.compareTo(other.middleName);
+				
+		}
+		return diff;
 	}
 
 }

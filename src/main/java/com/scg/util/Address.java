@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @author neil
  *A mailing address class.
  */
-public final class Address {
+public final class Address implements Comparable<Address>{
 	private String streetNumbers;
 	private String city;
 	private StateCode state;
@@ -103,6 +103,18 @@ public final class Address {
 		String format = "%s %n%2$s, %3$s %4$s";
 		String toStr = String.format(format, streetNumbers, city, state, postalCode);
 		return toStr;
+	}
+
+	@Override
+	public int compareTo(Address other) {
+		int diff = 0;
+		if ( this != other ) {
+			if (( this.streetNumbers.compareTo(other.streetNumbers)) == 0)
+			if (( this.city.compareTo(other.city)) == 0)
+			if (( this.state.compareTo(other.state)) == 0)
+			diff = this.postalCode.compareTo(other.postalCode);
+		}
+		return diff;
 	}
 	
 }

@@ -12,6 +12,7 @@ import com.scg.domain.TestInvoiceFooter;
 import com.scg.domain.TestInvoiceHeader;
 import com.scg.domain.TestInvoiceLineItem;
 import com.scg.domain.TestTimeCard;
+import com.scg.util.DateRangeTest;
 import com.scg.util.NameTest;
 import com.scg.util.TestAddress;
 
@@ -29,7 +30,8 @@ public class TestRunner {
     		  TestInvoiceLineItem.class,
     		  TestTimeCard.class,
     		  NameTest.class,
-    		  TestAddress.class);
+    		  TestAddress.class,
+    		  DateRangeTest.class);
 
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());

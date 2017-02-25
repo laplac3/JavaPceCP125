@@ -38,9 +38,9 @@ public class NameTest {
 	public void test() {
 		//test hashcode
 		int expectedHashCode1 = 1;
-		expectedHashCode1 = prime * expectedHashCode1 + harrison.hashCode();
+		expectedHashCode1 = expectedHashCode1*prime + harrison.hashCode();
 		expectedHashCode1 = expectedHashCode1*prime + ford.hashCode();
-		expectedHashCode1 = expectedHashCode1*31;
+		expectedHashCode1 = expectedHashCode1*prime + "N/A".hashCode();
 		assertEquals(expectedHashCode1, harrisonFord.hashCode(),0);
 		// test jane
 		int expectedHashCode2 = 1;
@@ -74,7 +74,7 @@ public class NameTest {
 								append(", ").
 								append(harrison).
 								append(" ").
-								append("");
+								append("N/A");
 		assertEquals(str.toString(),harrisonFord.toString());
 		
 		StringBuilder str1 = new StringBuilder(); 

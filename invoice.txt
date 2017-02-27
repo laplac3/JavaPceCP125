@@ -1,0 +1,73 @@
+The Small Consulting Group 
+1616 Index Ct. 
+Renton, WA 98058 
+
+Invoice For: 
+Acme Industries 
+1616 Index Ct. 
+Redmond, WA 98055 
+Coyote, Wiley N/A 
+
+Invoice For Month of: March 2006 
+Invoice Date: Feb 26, 2017 
+
+Date        Consultant                    Skill                 Hours   Charge 
+----------  ----------------------------  --------------------  ------  ----------
+03/06/06    Coder, Carl N/A               Software Engineer          8     1200.00
+03/07/06    Coder, Carl N/A               Software Engineer          8     1200.00
+
+total                                                               16    2,400.00
+
+The Small Consulting Group                                            Page:      1 
+==================================================================================
+
+The Small Consulting Group 
+1616 Index Ct. 
+Renton, WA 98058 
+
+Invoice For: 
+FooBar Enterprises 
+1024 Kilobyte Dr. 
+Silicone Gulch, CA 94105 
+Sam, Yosemite N/A 
+
+Invoice For Month of: March 2006 
+Invoice Date: Feb 26, 2017 
+
+Date        Consultant                    Skill                 Hours   Charge 
+----------  ----------------------------  --------------------  ------  ----------
+03/08/06    Coder, Carl N/A               Software Engineer          8     1200.00
+03/09/06    Coder, Carl N/A               Software Engineer         12     1800.00
+03/06/06    Architect, Ann S.             System Architect           8     1600.00
+03/08/06    Architect, Ann S.             System Architect           8     1600.00
+03/09/06    Architect, Ann S.             System Architect           8     1600.00
+
+The Small Consulting Group                                            Page:      1 
+==================================================================================
+
+The Small Consulting Group 
+1616 Index Ct. 
+Renton, WA 98058 
+
+Invoice For: 
+FooBar Enterprises 
+1024 Kilobyte Dr. 
+Silicone Gulch, CA 94105 
+Sam, Yosemite N/A 
+
+Invoice For Month of: March 2006 
+Invoice Date: Feb 26, 2017 
+
+Date        Consultant                    Skill                 Hours   Charge 
+----------  ----------------------------  --------------------  ------  ----------
+03/10/06    Architect, Ann S.             System Architect           8     1600.00
+03/11/06    Architect, Ann S.             System Architect           8     1600.00
+03/13/06    Architect, Ann S.             System Architect           8     1600.00
+03/14/06    Architect, Ann S.             System Architect           8     1600.00
+03/17/06    Architect, Ann S.             System Architect           8     1600.00
+
+total                                                               84   15,800.00
+
+The Small Consulting Group                                            Page:      2 
+==================================================================================
+

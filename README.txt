@@ -1,1 +1,1 @@
-mvn clean compile exec:java -Dexec.mainClass=app.Assignment03
+mvn clean compile exec:java -Dexec.mainClass=app.Assignment04

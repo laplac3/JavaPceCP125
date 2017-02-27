@@ -1,7 +1,7 @@
 /Users/laplace/cs/cp125/src/main/java/com/scg/domain/ConsultantTime.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/domain/InvoiceFooter.java
-/Users/laplace/cs/cp125/src/main/java/app/Assignment03.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/domain/Account.java
+/Users/laplace/cs/cp125/src/main/java/app/Assignment04.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/util/Name.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/util/StateCode.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/domain/NonBillableAccount.java
@@ -13,6 +13,7 @@
 /Users/laplace/cs/cp125/src/main/java/com/scg/util/DateRange.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/domain/Skill.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/util/TimeCardConsultantComparator.java
+/Users/laplace/cs/cp125/src/main/java/com/scg/util/TimeCardListUtil.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/domain/ClientAccount.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/util/ListFactory.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/domain/TimeCard.java

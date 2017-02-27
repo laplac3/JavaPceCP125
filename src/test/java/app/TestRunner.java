@@ -15,6 +15,7 @@ import com.scg.domain.TestTimeCard;
 import com.scg.util.DateRangeTest;
 import com.scg.util.NameTest;
 import com.scg.util.TestAddress;
+import com.scg.util.TimeCardListUtilTest;
 
 
 
@@ -31,7 +32,8 @@ public class TestRunner {
     		  TestTimeCard.class,
     		  NameTest.class,
     		  TestAddress.class,
-    		  DateRangeTest.class);
+    		  DateRangeTest.class,
+    		  TimeCardListUtilTest.class);
 
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());

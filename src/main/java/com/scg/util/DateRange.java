@@ -73,9 +73,6 @@ public final class DateRange {
 	 * @return Boolean true if it is with in range.
 	 */
 	public boolean isInRange( java.time.LocalDate date ) {
-		boolean bool = false;
-		if ( date.compareTo(startDate) >= 0 && date.compareTo(endDate) <= 0)
-			bool = true;
-		return bool;
+		return date.compareTo(startDate) >= 0 && date.compareTo(endDate) <= 0 ? true : false;
 	}
 }

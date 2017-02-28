@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.scg.domain.ClientAccount;
 import com.scg.domain.Consultant;
@@ -96,6 +97,8 @@ public final class TimeCard implements Comparable<TimeCard> {
 	public void addConsultantTime(ConsultantTime consultantTime) {
 		consultingHours.add(consultantTime);	
 		totalHours += consultantTime.getHours();
+		
+//		(e -> e.getAccount().isBillable() ? totalBillableHours += e.getHours() : totalNonBillableHours += e.getHours());
 		if (consultantTime.getAccount().isBillable())
 			totalBillableHours += consultantTime.getHours();
 		else
@@ -125,11 +128,10 @@ public final class TimeCard implements Comparable<TimeCard> {
 	 * @param clientName - Name of the client to extract hours for.
 	 * @return Returns a list of billable hours for.
 	 */
-	public List<ConsultantTime> getBillableHoursForClients(String clientName){
-		List<ConsultantTime> consultanBillableHours = new ArrayList<>();
-		for ( ConsultantTime a : consultingHours ) 
-			if ( a.getAccount().getName().equals(clientName) && a.getAccount().isBillable() )
-				 consultanBillableHours.add(a);
+	public List<ConsultantTime> getBillableHoursForClients(String clientName){		
+		List<ConsultantTime> consultanBillableHours = 
+				consultingHours.stream()
+				.filter(e -> e.getAccount().getName().equals(clientName)).collect(Collectors.toList());
 		return consultanBillableHours;
 	}
 	

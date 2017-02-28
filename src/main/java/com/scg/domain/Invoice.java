@@ -19,6 +19,10 @@ import com.scg.util.StateCode;
 
 import app.Assignment04;
 
+/**
+ * @author Neil
+ * Encapsulates a invoice. 
+ */
 public final class Invoice {
 	
 	/**
@@ -68,6 +72,9 @@ public final class Invoice {
     /** Property containing the invoicing business zip or postal code. */
     private static final String BUSINESS_ZIP_PROP = "business.zip";
     
+    /**
+     * If consultant has no middle name then it is "Not Available"
+     */
     private static final String NA = "N/A";
     
 	/**
@@ -181,11 +188,9 @@ public final class Invoice {
 	 */
 	public void extractLineItems(TimeCard timeCard) {
 		final List<ConsultantTime> billableHoursList = timeCard.getBillableHoursForClients(client.getName());
-		for ( final ConsultantTime time : billableHoursList ) {
-			final LocalDate currentDate = time.getDate();
-			if (currentDate.getMonth() == startDate.getMonth())
-				addLineItem(new InvoiceLineItem(currentDate, timeCard.getConsultant(), time.getSkillType(), time.getHours() ) );
-		}
+		billableHoursList.stream().filter( e-> e.getDate().getMonth() == startDate.getMonth() )
+		.forEach(e->addLineItem( 
+				new InvoiceLineItem(e.getDate(), timeCard.getConsultant(), e.getSkillType(), e.getHours() )));
 	}
 
 	@Override

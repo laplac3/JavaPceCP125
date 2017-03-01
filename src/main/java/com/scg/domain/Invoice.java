@@ -116,6 +116,9 @@ public final class Invoice {
 	 * Number of lines per page.
 	 */
     private final int itemsPerPage = 5;
+	/**
+	 * Date of the invoice.
+	 */
 	private LocalDate invoiceDate;
 	/**
 	 * Construct an invoice for a client. The period is set from the beginning of the month to the end.

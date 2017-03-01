@@ -95,7 +95,7 @@ public final class TimeCard implements Comparable<TimeCard> {
 	 * @param consultantTime - The consultant time to add.
 	 */
 	public void addConsultantTime(ConsultantTime consultantTime) {
-		consultingHours.add(consultantTime);	
+	    consultingHours.add(consultantTime);	
 		totalHours += consultantTime.getHours();
 		int hours =consultantTime.getHours();
 		boolean bool = consultantTime.getAccount().isBillable();
@@ -118,7 +118,6 @@ public final class TimeCard implements Comparable<TimeCard> {
 	private void addNonBillableHours(int hours ) {
 		this.totalNonBillableHours += hours;
 	}
-	
 	/**
 	 * Getter for the total hours.
 	 * @return Returns the total hours.

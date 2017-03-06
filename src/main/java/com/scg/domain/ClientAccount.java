@@ -1,5 +1,10 @@
 package com.scg.domain;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamField;
+
 import com.scg.util.Address;
 import com.scg.util.Name;
 
@@ -9,6 +14,21 @@ import com.scg.util.Name;
  */
 public final class ClientAccount implements Account, Comparable<ClientAccount> {
 
+	/**
+	 * Version Id
+	 */
+	private static final long serialVersionUID = 3546117381376328400L;
+	
+	/**
+	 * The serialization fields.
+	 */
+//	private static final ObjectStreamField[] serialPersistenFields = {
+//			new ObjectStreamField("name", String.class),
+//			new ObjectStreamField("contact", Name.class),
+//			new ObjectStreamField("address", Address.class)
+//			
+//	};
+	
 	/**
 	 * Name of the client
 	 */
@@ -108,5 +128,32 @@ public final class ClientAccount implements Account, Comparable<ClientAccount> {
 		}
 		return diff;
 	}
-
+	
+//	/**
+//	 * Reads the object fields from stream.
+//	 * @param ois the stream to read the object from.
+//	 * @throws ClassNotFoundException if the read object's class can't be loaded.
+//	 * @throws IOException if any I/O exception occurs.
+//	 */
+//	private void readObject(final ObjectInputStream ois ) 
+//			throws ClassNotFoundException, IOException {
+//		ObjectInputStream.GetField fields;
+//		try {
+//			fields = ois.readFields();
+//		} catch (IOException ex) {
+//			ex.printStackTrace();
+//			throw ex;
+//		}
+//		name = (String) fields.get("name", "N/A");
+//		contact = (Name) fields.get("contact", new Name() );
+//		address = (Address) fields.get("address", new Address() );
+//	}
+//
+//	private void writeObject(final ObjectOutputStream oos) throws IOException {
+//		ObjectOutputStream.PutField fields = oos.putFields();
+//		fields.put("name", name);
+//		fields.put("contact", contact);
+//		fields.put("address", address);
+//		oos.writeFields();
+//	}
 }

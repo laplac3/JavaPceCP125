@@ -1,5 +1,10 @@
 package com.scg.domain;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamField;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +26,18 @@ import com.scg.util.Name;
  * 
  *Encapsulates a time card capable of storing consultant's billable and nonbillable hours for a week.
  */
-public final class TimeCard implements Comparable<TimeCard> {
+public final class TimeCard implements Comparable<TimeCard>, Serializable {
+	
+	/**
+	 * Serialization fields.
+	 */
+	private static final ObjectStreamField[] serialPersistentFields = {
+		new ObjectStreamField("weekStartingDay", LocalDate.class),
+		new ObjectStreamField("totalBillableHours", int.class),
+		new ObjectStreamField("consultant", Consultant.class),
+		new ObjectStreamField("totalNonBillableHours", int.class),
+		new ObjectStreamField("consultingHours",List.class)
+	};
 	
 	/**
 	 * The consultant for the time card.
@@ -283,6 +299,39 @@ public final class TimeCard implements Comparable<TimeCard> {
 		
 		strFinal = strFinal.concat(str8).concat(str1);		
 		return strFinal;
+	}
+	
+	/**
+	 * Read the objects fields from stream
+	 * @param ois the stream to read the object from.
+	 * @throws ClassNotFoundException if the read object's class can't be loaded.
+	 * @throws IOException if any I/O exception occurs
+	 */
+	private <E> void readObject(final ObjectInputStream ois )
+		throws ClassNotFoundException, IOException {
+		
+		ObjectInputStream.GetField fields;
+		try {
+			fields = ois.readFields();
+		} catch (IOException ex ) {
+			ex.printStackTrace();
+			throw ex;
+		}
+		weekStartingDay = (LocalDate)fields.get("weekStartingDay", LocalDate.now());
+		totalBillableHours = fields.get("totalBillableHours", 0);
+		consultant = (Consultant)fields.get("consultant", new Consultant());
+		totalNonBillableHours = fields.get("totalNonBillableHours", 0);
+		consultingHours = (List<ConsultantTime>)fields.get("consultingHours", new ArrayList<E>() );
+	}
+	private void writeObject( final ObjectOutputStream oos ) 
+		throws IOException {
+		ObjectOutputStream.PutField fields = oos.putFields();
+		fields.put("weekStartingDay", weekStartingDay);
+		fields.put("totalBillableHours", totalBillableHours);
+		fields.put("consultant", consultant );
+		fields.put("totalNonBillableHours", totalNonBillableHours);
+		fields.put("consultingHours", consultingHours);
+		oos.writeFields();
 	}
 
 }

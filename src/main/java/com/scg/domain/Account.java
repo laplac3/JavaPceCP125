@@ -1,10 +1,12 @@
 package com.scg.domain;
 
+import java.io.Serializable;
+
 /**
  * @author neil
  *Interfaces all accounts must have.
  */
-public interface Account {
+public interface Account extends Serializable {
 	
 	/**
 	 * Getter for the name of the account.

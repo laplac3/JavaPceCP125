@@ -1,5 +1,10 @@
 package com.scg.util;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamField;
+import java.io.Serializable;
 import java.util.Formatter;
 
 import org.slf4j.Logger;
@@ -11,12 +16,40 @@ import org.slf4j.LoggerFactory;
  * @author neil
  *A mailing address class.
  */
-public final class Address implements Comparable<Address>{
-	private String streetNumbers;
-	private String city;
-	private StateCode state;
-	private String postalCode;
+public final class Address implements Comparable<Address>, Serializable {
+	/**
+	 * Version Id.
+	 */
+	private static final long serialVersionUID = 7428228518988946916L;
 	
+    /**
+     * The serialization fields.
+     */
+    private static final ObjectStreamField[] serialPersistentFields = {
+            new ObjectStreamField("streetNumbers", String.class),
+            new ObjectStreamField("city", String.class),
+            new ObjectStreamField("state", StateCode.class),
+            new ObjectStreamField("postalCode", String.class),
+            new ObjectStreamField("hashCode", int.class)
+        };
+	/**
+	 * The Street Numbers.
+	 */
+	private String streetNumbers;
+	/**
+	 * The city.
+	 */
+	private String city;
+	/**
+	 * The state code.
+	 */
+	private StateCode state;
+	/**
+	 * The zip.
+	 */
+	private String postalCode;
+	private int hashCode;
+	private static final String NA = "N/A";
     
 	/**
 	 * Constructor for a mailing address instance.
@@ -30,6 +63,11 @@ public final class Address implements Comparable<Address>{
 		this.city = city;
 		this.state = state;
 		this.postalCode = postalCode;
+		this.hashCode = hashCode();
+	}
+
+	public Address() {
+
 	}
 
 	/**
@@ -58,6 +96,9 @@ public final class Address implements Comparable<Address>{
 	 */
 	public String getPostalCode() {
 		return postalCode;
+	}
+	public int getHashCode() {
+		return this.hashCode;
 	}
 
 	@Override
@@ -117,4 +158,31 @@ public final class Address implements Comparable<Address>{
 		return diff;
 	}
 	
+	/**
+	 * Reads the object fields from stream.
+	 * @param ois the stream to read the object from.
+	 * @throws ClassNotFoundException if the read object's class can't be loaded.
+	 * @throws IOException if any I/O exceptions occur.
+	 */
+	private void readObject( final ObjectInputStream ois ) 
+		throws ClassNotFoundException, IOException {
+		ObjectInputStream.GetField fields = ois.readFields();
+		String sN = (String) fields.get("streetNumbers", NA );
+		String c = (String) fields.get("city", NA);
+		StateCode sC = (StateCode) fields.get("state", StateCode.NY);
+		String p = (String) fields.get("postalCode", NA);
+		int h = fields.get("hashCode", 0);
+	}
+	
+	private void writeObject( final ObjectOutputStream oos ) 
+		throws IOException {
+		
+		ObjectOutputStream.PutField fields = oos.putFields();
+		fields.put("streetNumbers", streetNumbers);
+		fields.put("city", city);
+		fields.put("state", state);
+		fields.put("postalCode", postalCode);
+		fields.put("hashCode", hashCode);
+		oos.writeFields();
+	}
 }

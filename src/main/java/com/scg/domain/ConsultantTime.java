@@ -1,12 +1,28 @@
 package com.scg.domain;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamField;
+import java.io.Serializable;
+import java.text.MessageFormat.Field;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 /**
  * @author neil
  *A consultant time, maintains the account, skill, date and hours.
  */
-public final class ConsultantTime {
+public final class ConsultantTime implements Serializable {
+	
+	/**
+	 * The serialization fields.
+	 */
+	private static final ObjectStreamField[] serialPresistenceFields = {
+			new ObjectStreamField("date", LocalDate.class),
+			new ObjectStreamField("account", Account.class),
+			new ObjectStreamField("skillType", Skill.class),
+			new ObjectStreamField("hours",int.class)
+	};
 	
 	/**
 	 * Date of the work.
@@ -43,7 +59,6 @@ public final class ConsultantTime {
 		}
 	}
 	
-
 
 	/**
 	 * Getter for the date.
@@ -145,6 +160,30 @@ public final class ConsultantTime {
 	public String toString() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM/dd/yyyy");
 		return String.format("%s %2$s %3$s %4$s%n",account.getName(),date.format(formatter),skillType.getTitle(),hours );
+	}
+	
+	/**
+	 * Read the Object fields from stream.
+	 * @param ois the stream to read object from.
+	 * @throws ClassNotFoundException if the read object class can't be loaded.
+	 * @throws IOException if any I/O exception occurs.
+	 */
+	private void readObject(final ObjectInputStream ois ) 
+		throws ClassNotFoundException, IOException {
+		ObjectInputStream.GetField fields = ois.readFields();
+		LocalDate d = (LocalDate) fields.get("date", LocalDate.now());
+		Account a = (Account) fields.get("account", new ClientAccount() );
+		Skill s = (Skill) fields.get("skillType", Skill.UKNOWN_SKILL);
+		int h = fields.get("hours", 0 );
+	}
+	
+	private void writeObject(final ObjectOutputStream oos ) throws IOException {
+		ObjectOutputStream.PutField fields =oos.putFields();
+		fields.put("date", date );
+		fields.put("account", account);
+		fields.put("skillType", skillType);
+		fields.put("hours", hours);
+		oos.writeFields();
 	}
 
 }

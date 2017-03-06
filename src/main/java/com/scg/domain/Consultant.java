@@ -1,24 +1,47 @@
 package com.scg.domain;
 
+import java.io.Serializable;
+import java.io.InvalidObjectException;
+import java.io.ObjectInputStream;
+import java.io.ObjectStreamField;
+
 import com.scg.util.Name;
 
 /**
  * @author neil
  *A consultant.
  */
-public class Consultant implements Comparable<Consultant> {
+public class Consultant implements Comparable<Consultant>, Serializable {
+	
+	/**
+	 * Version Id
+	 */
+	private static final long serialVersionUID = 4072449537156214365L;
+	
+	/**
+	 * The serialization fields
+	 */
+	private static final ObjectStreamField[] serialPersistenceFields = {
+			new ObjectStreamField( "name", String.class),
+			new ObjectStreamField("hashCode", int.class)
+	};
 	
 	/**
 	 * Name of the consultant.
 	 */
 	private Name name;
-
+	
+	/**
+	 * The hash code.
+	 */
+	private int hashCode;
 	/**
 	 * Creates a new instance of consultant
 	 * @param name - The name of the consultant to set.
 	 */
 	public Consultant(Name name) {
 		this.name = name;
+		this.hashCode = hashCode();
 	}
 	
 	/**
@@ -47,7 +70,10 @@ public class Consultant implements Comparable<Consultant> {
 	public String toString() {
 		return name.toString();
 	}
-
+	
+	public int getHashCode() {
+		return this.hashCode;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -82,4 +108,30 @@ public class Consultant implements Comparable<Consultant> {
 		return diff;
 	}
 	
+	
+	/**
+	 * @return
+	 */
+	private Object writeReplace() {
+		return new SerializationProxy(this);
+	}
+	
+	private void readObject(ObjectInputStream ois) throws InvalidObjectException {
+		throw new InvalidObjectException("Proxy required");
+	}
+	
+	private static class SerializationProxy implements Serializable {
+		private Name n;
+		private int h;
+		SerializationProxy(final Consultant consultant){
+			n = consultant.name;
+			h = consultant.hashCode;
+		}
+		
+		/**
+		 * Creates and returns an instance of the inclosed class.
+		 * @return A Consultant. 
+		 */
+		private Object readResolve() { return new Consultant(n); }
+	}
 }

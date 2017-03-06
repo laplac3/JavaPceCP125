@@ -1,10 +1,30 @@
 package com.scg.util;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamField;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
 
-public final class DateRange {
+/**
+ * @author neil
+ * Checks to see if invoice is with in a give range.
+ */
+public final class DateRange implements Serializable {
 	
+	/**
+	 * Version Id.
+	 */
+	private static final long serialVersionUID = -3608492595733074615L;
+	/**
+	 * 
+	 */
+	private static final ObjectStreamField[] serialPersistentFields = {
+			new ObjectStreamField("startDate", LocalDate.class),
+			new ObjectStreamField("endDate", LocalDate.class)
+	};
 	/**
 	 * The startDate as LocalDate.
 	 */
@@ -74,5 +94,26 @@ public final class DateRange {
 	 */
 	public boolean isInRange( java.time.LocalDate date ) {
 		return date.compareTo(startDate) >= 0 && date.compareTo(endDate) <= 0 ? true : false;
+	}
+	
+	/**
+	 * Reads the object fields from stream.
+	 * @param ois the stream to read the object from.
+	 * @throws ClassNotFoundException if the read object's class can't be loaded.
+	 * @throws IOException if any I/O exceptions occur.
+	 */
+	private void readObject(final ObjectInputStream ois )
+		throws ClassNotFoundException, IOException {
+		ObjectInputStream.GetField fields = ois.readFields();
+		LocalDate s = (LocalDate) fields.get("startDate", LocalDate.now());
+		LocalDate e = (LocalDate) fields.get("endDate", LocalDate.now());
+	}
+	
+	private void writeObject( final ObjectOutputStream oos ) 
+		throws IOException {
+		ObjectOutputStream.PutField fields = oos.putFields();
+		fields.put("startDate", startDate);
+		fields.put("endDate", endDate);
+		oos.writeFields();
 	}
 }

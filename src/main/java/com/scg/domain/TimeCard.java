@@ -36,7 +36,8 @@ public final class TimeCard implements Comparable<TimeCard>, Serializable {
 		new ObjectStreamField("totalBillableHours", int.class),
 		new ObjectStreamField("consultant", Consultant.class),
 		new ObjectStreamField("totalNonBillableHours", int.class),
-		new ObjectStreamField("consultingHours",List.class)
+		new ObjectStreamField("totalHours", int.class),
+		new ObjectStreamField("consultingHours", ArrayList.class)
 	};
 	
 	/**
@@ -162,8 +163,12 @@ public final class TimeCard implements Comparable<TimeCard>, Serializable {
 		return consultanBillableHours;
 	}
 	
+
+	@Override
 	public String toString() {
-		return "consultant " + consultant.getName().toString();
+		return "TimeCard [consultant=" + consultant + ", weekStartingDay=" + weekStartingDay + ", totalBillableHours="
+				+ totalBillableHours + ", totalNonBillableHours=" + totalNonBillableHours + ", totalHours=" + totalHours
+				+ ", consultingHours="  + consultingHours +"]";
 	}
 
 	/**
@@ -307,22 +312,22 @@ public final class TimeCard implements Comparable<TimeCard>, Serializable {
 	 * @throws ClassNotFoundException if the read object's class can't be loaded.
 	 * @throws IOException if any I/O exception occurs
 	 */
-	private <E> void readObject(final ObjectInputStream ois )
+	private void readObject(final ObjectInputStream ois )
 		throws ClassNotFoundException, IOException {
-		
-		ObjectInputStream.GetField fields;
-		try {
-			fields = ois.readFields();
-		} catch (IOException ex ) {
-			ex.printStackTrace();
-			throw ex;
-		}
+
+		ObjectInputStream.GetField fields = ois.readFields();
 		weekStartingDay = (LocalDate)fields.get("weekStartingDay", LocalDate.now());
 		totalBillableHours = fields.get("totalBillableHours", 0);
 		consultant = (Consultant)fields.get("consultant", new Consultant());
 		totalNonBillableHours = fields.get("totalNonBillableHours", 0);
-		consultingHours = (List<ConsultantTime>)fields.get("consultingHours", new ArrayList<E>() );
+		totalHours = fields.get("totalHours", 0);
+		consultingHours = (List<ConsultantTime>)fields.get("consultingHours", new ArrayList<ConsultantTime>() );
 	}
+	/**
+	 * Write the timecard fields to stream.
+	 * @param oos the stream to write.
+	 * @throws IOException if any I/O exceptions occur.
+	 */
 	private void writeObject( final ObjectOutputStream oos ) 
 		throws IOException {
 		ObjectOutputStream.PutField fields = oos.putFields();
@@ -330,6 +335,7 @@ public final class TimeCard implements Comparable<TimeCard>, Serializable {
 		fields.put("totalBillableHours", totalBillableHours);
 		fields.put("consultant", consultant );
 		fields.put("totalNonBillableHours", totalNonBillableHours);
+		fields.put("totalHours", totalHours);
 		fields.put("consultingHours", consultingHours);
 		oos.writeFields();
 	}

@@ -17,12 +17,7 @@ public class InitLists {
         final List<Consultant> consultants = new ArrayList<Consultant>();
         final List<TimeCard> timeCards = new ArrayList<TimeCard>();
         ListFactory.populateLists(accounts, consultants, timeCards);
-        
-        for (Consultant c : consultants )
-        	System.out.print(c.getName()+ "\n");
-        
-        for (TimeCard card : timeCards )
-        	System.out.println(card.toReportString());
+ 
         
         FileOutputStream cLF = new FileOutputStream("ClientList.ser");
         ObjectOutputStream cLFout = new ObjectOutputStream(cLF);
@@ -34,7 +29,7 @@ public class InitLists {
         FileOutputStream tCF = new FileOutputStream("TimeCardList.ser");
         ObjectOutputStream tCFout = new ObjectOutputStream(tCF);
 
-        // write the client objects to file
+        // write the timeCard objects to file
         tCFout.writeObject(timeCards);
         tCFout.close();
 	}

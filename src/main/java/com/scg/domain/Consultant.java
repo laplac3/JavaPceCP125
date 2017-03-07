@@ -21,10 +21,10 @@ public class Consultant implements Comparable<Consultant>, Serializable {
 	/**
 	 * The serialization fields
 	 */
-	private static final ObjectStreamField[] serialPersistenceFields = {
-			new ObjectStreamField( "name", String.class),
-			new ObjectStreamField("hashCode", int.class)
-	};
+//	private static final ObjectStreamField[] serialPersistenceFields = {
+//			new ObjectStreamField( "name", String.class),
+//			new ObjectStreamField("hashCode", int.class)
+//	};
 	
 	/**
 	 * Name of the consultant.
@@ -121,17 +121,29 @@ public class Consultant implements Comparable<Consultant>, Serializable {
 	}
 	
 	private static class SerializationProxy implements Serializable {
-		private Name n;
-		private int h;
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 706379947643817124L;
+		private final String x;
+		private final String y;
+		private final String z;
+
 		SerializationProxy(final Consultant consultant){
-			n = consultant.name;
-			h = consultant.hashCode;
+			final Name name = consultant.getName();
+			x = name.getLastName();
+			y= name.getFirstName();
+			z = name.getMidleName();
 		}
 		
 		/**
 		 * Creates and returns an instance of the inclosed class.
 		 * @return A Consultant. 
 		 */
-		private Object readResolve() { return new Consultant(n); }
+		private Object readResolve() { 
+			return new Consultant(new Name(x,y,z)); 
+			}
 	}
+	
 }

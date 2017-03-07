@@ -22,12 +22,13 @@ public final class ClientAccount implements Account, Comparable<ClientAccount> {
 	/**
 	 * The serialization fields.
 	 */
-//	private static final ObjectStreamField[] serialPersistenFields = {
-//			new ObjectStreamField("name", String.class),
-//			new ObjectStreamField("contact", Name.class),
-//			new ObjectStreamField("address", Address.class)
-//			
-//	};
+	@SuppressWarnings("unused")
+	private static final ObjectStreamField[] serialPersistenFields = {
+			new ObjectStreamField("name", String.class),
+			new ObjectStreamField("contact", Name.class),
+			new ObjectStreamField("address", Address.class),
+			new ObjectStreamField("hashCode", int.class)
+	};
 	
 	/**
 	 * Name of the client
@@ -41,6 +42,7 @@ public final class ClientAccount implements Account, Comparable<ClientAccount> {
 	 * The address of the account
 	 */
 	private Address address;
+	private int hashCode;
 	
 	/**
 	 * Creates a new instance of client account.
@@ -50,13 +52,14 @@ public final class ClientAccount implements Account, Comparable<ClientAccount> {
 	public ClientAccount(String name, Name contact) {
 		this.name = name;
 		this.contact = contact;
+		this.hashCode = this.hashCode();
 	}
 
 	/**
 	 *  Creates a new instance of client account.
 	 */
 	public ClientAccount() {
-
+		this.hashCode = this.hashCode();
 	}
 
 	public String getName() {
@@ -72,6 +75,7 @@ public final class ClientAccount implements Account, Comparable<ClientAccount> {
 		this.name = name;
 		this.contact = contact;
 		this.address = address;
+		this.hashCode = this.hashCode();
 	}
 
 	/**
@@ -129,31 +133,38 @@ public final class ClientAccount implements Account, Comparable<ClientAccount> {
 		return diff;
 	}
 	
-//	/**
-//	 * Reads the object fields from stream.
-//	 * @param ois the stream to read the object from.
-//	 * @throws ClassNotFoundException if the read object's class can't be loaded.
-//	 * @throws IOException if any I/O exception occurs.
-//	 */
-//	private void readObject(final ObjectInputStream ois ) 
-//			throws ClassNotFoundException, IOException {
-//		ObjectInputStream.GetField fields;
-//		try {
-//			fields = ois.readFields();
-//		} catch (IOException ex) {
-//			ex.printStackTrace();
-//			throw ex;
-//		}
-//		name = (String) fields.get("name", "N/A");
-//		contact = (Name) fields.get("contact", new Name() );
-//		address = (Address) fields.get("address", new Address() );
-//	}
-//
-//	private void writeObject(final ObjectOutputStream oos) throws IOException {
-//		ObjectOutputStream.PutField fields = oos.putFields();
-//		fields.put("name", name);
-//		fields.put("contact", contact);
-//		fields.put("address", address);
-//		oos.writeFields();
-//	}
+	/**
+	 * Reads the object fields from stream.
+	 * @param ois the stream to read the object from.
+	 * @throws ClassNotFoundException if the read object's class can't be loaded.
+	 * @throws IOException if any I/O exception occurs.
+	 */
+	private void readObject(final ObjectInputStream ois ) 
+			throws ClassNotFoundException, IOException {
+		ObjectInputStream.GetField fields;
+		try {
+			fields = ois.readFields();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+		name = (String) fields.get("name", "N/A");
+		contact = (Name) fields.get("contact", new Name() );
+		address = (Address) fields.get("address", new Address() );
+		hashCode = fields.get("hashCode", 0 );
+	}
+
+	/**
+	 * Writes the object fields to stream.
+	 * @param oos the stream to write to.
+	 * @throws IOException if any I/O exception occurs.
+	 */
+	private void writeObject(final ObjectOutputStream oos) throws IOException {
+		ObjectOutputStream.PutField fields = oos.putFields();
+		fields.put("name", name);
+		fields.put("contact", contact);
+		fields.put("address", address);
+		fields.put("hashCode", hashCode);
+		oos.writeFields();
+	}
 }

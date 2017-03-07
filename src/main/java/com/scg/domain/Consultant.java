@@ -11,20 +11,8 @@ import com.scg.util.Name;
  * @author neil
  *A consultant.
  */
+@SuppressWarnings("serial")
 public class Consultant implements Comparable<Consultant>, Serializable {
-	
-	/**
-	 * Version Id
-	 */
-	private static final long serialVersionUID = 4072449537156214365L;
-	
-	/**
-	 * The serialization fields
-	 */
-//	private static final ObjectStreamField[] serialPersistenceFields = {
-//			new ObjectStreamField( "name", String.class),
-//			new ObjectStreamField("hashCode", int.class)
-//	};
 	
 	/**
 	 * Name of the consultant.
@@ -116,20 +104,42 @@ public class Consultant implements Comparable<Consultant>, Serializable {
 		return new SerializationProxy(this);
 	}
 	
+	/**
+	 * Read object with proxy.
+	 * @param ois the stream.
+	 * @throws InvalidObjectException if there is no proxy. 
+	 */
 	private void readObject(ObjectInputStream ois) throws InvalidObjectException {
 		throw new InvalidObjectException("Proxy required");
 	}
 	
+	/**
+	 * @author neil.
+	 * Serialization with the use of a proxy. 
+	 */
 	private static class SerializationProxy implements Serializable {
 		
 		/**
-		 * 
+		 * Version Id.
 		 */
 		private static final long serialVersionUID = 706379947643817124L;
+		/**
+		 * Last name.
+		 */
 		private final String x;
+		/**
+		 * First name.
+		 */
 		private final String y;
+		/**
+		 * Middle name.
+		 */
 		private final String z;
 
+		/**
+		 * SerializationProxy constructor.
+		 * @param consultant constructs a serial proxy of a consultant.
+		 */
 		SerializationProxy(final Consultant consultant){
 			final Name name = consultant.getName();
 			x = name.getLastName();

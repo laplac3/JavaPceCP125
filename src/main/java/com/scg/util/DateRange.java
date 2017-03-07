@@ -19,7 +19,7 @@ public final class DateRange implements Serializable {
 	 */
 	private static final long serialVersionUID = -3608492595733074615L;
 	/**
-	 * 
+	 * Serial fields.
 	 */
 	private static final ObjectStreamField[] serialPersistentFields = {
 			new ObjectStreamField("startDate", LocalDate.class),
@@ -105,10 +105,15 @@ public final class DateRange implements Serializable {
 	private void readObject(final ObjectInputStream ois )
 		throws ClassNotFoundException, IOException {
 		ObjectInputStream.GetField fields = ois.readFields();
-		LocalDate s = (LocalDate) fields.get("startDate", LocalDate.now());
-		LocalDate e = (LocalDate) fields.get("endDate", LocalDate.now());
+		startDate = (LocalDate) fields.get("startDate", LocalDate.now());
+		endDate = (LocalDate) fields.get("endDate", LocalDate.now());
 	}
 	
+	/**
+	 * Writes the object fields from stream.
+	 * @param oos the stream to write the object to.
+	 * @throws IOException if any I/O exceptions occur.
+	 */
 	private void writeObject( final ObjectOutputStream oos ) 
 		throws IOException {
 		ObjectOutputStream.PutField fields = oos.putFields();

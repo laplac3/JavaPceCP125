@@ -4,9 +4,9 @@ Renton, WA 98058
 
 Invoice For: 
 Acme Industries 
-null 
-null, null null 
-null, null null 
+1616 Index Ct. 
+Redmond, WA 98055 
+Coyote, Wiley N/A 
 
 Invoice For Month of: March 2006 
 Invoice Date: Mar 06, 2017 
@@ -27,9 +27,9 @@ Renton, WA 98058
 
 Invoice For: 
 FooBar Enterprises 
-null 
-null, null null 
-null, null null 
+1024 Kilobyte Dr. 
+Silicone Gulch, CA 94105 
+Sam, Yosemite N/A 
 
 Invoice For Month of: March 2006 
 Invoice Date: Mar 06, 2017 
@@ -51,9 +51,9 @@ Renton, WA 98058
 
 Invoice For: 
 FooBar Enterprises 
-null 
-null, null null 
-null, null null 
+1024 Kilobyte Dr. 
+Silicone Gulch, CA 94105 
+Sam, Yosemite N/A 
 
 Invoice For Month of: March 2006 
 Invoice Date: Mar 06, 2017 

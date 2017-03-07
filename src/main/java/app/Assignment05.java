@@ -85,23 +85,16 @@ public class Assignment05 {
         @SuppressWarnings("unchecked")
 		List<ClientAccount> accounts = (List<ClientAccount>) cLFin.readObject();
         cLFin.close();
-        
-        //print
-        for ( ClientAccount a : accounts )
-        	System.out.println(a.getName());
+
         
         FileInputStream tCFis = new FileInputStream("TimeCardList.ser");
-        @SuppressWarnings("resource")
-		ObjectInputStream tCFin = new ObjectInputStream(tCFis);
+        ObjectInputStream tCFin = new ObjectInputStream(tCFis);
 
          
         // read the clients
         @SuppressWarnings("unchecked")
         List<TimeCard> timeCards = (List<TimeCard>) tCFin.readObject();
         tCFin.close();
-        
-        for ( TimeCard card : timeCards )
-        	System.out.println(card.toReportString());
         
         final List<Invoice> invoices = createInvoices(accounts, timeCards);
         // Print them

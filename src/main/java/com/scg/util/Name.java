@@ -10,8 +10,12 @@ import java.io.Serializable;
  * @author neil.
  * Encapsulates the first middle and last name of a person.
  */
+@SuppressWarnings("serial")
 public final class Name implements Comparable<Name>, Serializable {
 	
+	/**
+	 * The serial fields.
+	 */
 	private static final ObjectStreamField[] serialPersistentFields = {
 			new ObjectStreamField("lastName",String.class),
 			new ObjectStreamField("middleName", String.class),
@@ -183,10 +187,9 @@ public final class Name implements Comparable<Name>, Serializable {
 	private void readObject(final ObjectInputStream ois ) 
 		throws ClassNotFoundException, IOException {
 		ObjectInputStream.GetField fields = ois.readFields();
-		String l = (String) fields.get("lastName", NA);
-		String m = (String) fields.get("middleName", NA);
-		String f = (String) fields.get("firstName", NA);
-		int h = fields.get("hashCode", 0);	
+		lastName = (String) fields.get("lastName", NA);
+		middleName = (String) fields.get("middleName", NA);
+		firstName = (String) fields.get("firstName", NA);
 	}
 	
 	private void writeObject(final ObjectOutputStream oos )
@@ -196,7 +199,6 @@ public final class Name implements Comparable<Name>, Serializable {
 		fields.put("lastName", lastName);
 		fields.put("middleName", middleName);
 		fields.put("firstName", firstName);
-		fields.put("hashCode", hashCode);
 		oos.writeFields();
 	}
 

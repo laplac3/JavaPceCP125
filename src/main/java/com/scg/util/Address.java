@@ -167,13 +167,18 @@ public final class Address implements Comparable<Address>, Serializable {
 	private void readObject( final ObjectInputStream ois ) 
 		throws ClassNotFoundException, IOException {
 		ObjectInputStream.GetField fields = ois.readFields();
-		String sN = (String) fields.get("streetNumbers", NA );
-		String c = (String) fields.get("city", NA);
-		StateCode sC = (StateCode) fields.get("state", StateCode.NY);
-		String p = (String) fields.get("postalCode", NA);
-		int h = fields.get("hashCode", 0);
+		streetNumbers = (String) fields.get("streetNumbers", NA );
+		city = (String) fields.get("city", NA);
+		state = (StateCode) fields.get("state", StateCode.NY);
+		postalCode = (String) fields.get("postalCode", NA);
+		hashCode = fields.get("hashCode", 0);
 	}
 	
+	/**
+	 * Writes object to stream.
+	 * @param oos the stream to write the object to.
+	 * @throws IOException if any I/O exceptions occur.
+	 */
 	private void writeObject( final ObjectOutputStream oos ) 
 		throws IOException {
 		

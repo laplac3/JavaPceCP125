@@ -26,6 +26,7 @@ import com.scg.util.Name;
  * 
  *Encapsulates a time card capable of storing consultant's billable and nonbillable hours for a week.
  */
+@SuppressWarnings("serial")
 public final class TimeCard implements Comparable<TimeCard>, Serializable {
 	
 	/**
@@ -312,6 +313,7 @@ public final class TimeCard implements Comparable<TimeCard>, Serializable {
 	 * @throws ClassNotFoundException if the read object's class can't be loaded.
 	 * @throws IOException if any I/O exception occurs
 	 */
+	@SuppressWarnings("unchecked")
 	private void readObject(final ObjectInputStream ois )
 		throws ClassNotFoundException, IOException {
 

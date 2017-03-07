@@ -125,7 +125,7 @@ public final class Assignment04 {
         // Now print it to a file
         PrintStream writer;
         try {
-            writer = new PrintStream(new FileOutputStream("invoice.txt"));
+            writer = new PrintStream(new FileOutputStream("invoicev04.txt"));
             printInvoices(invoices, writer);
         } catch (final IOException ex) {
             log.error("Unable to print invoice.", ex);

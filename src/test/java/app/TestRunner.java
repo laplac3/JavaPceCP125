@@ -17,6 +17,8 @@ import com.scg.util.NameTest;
 import com.scg.util.TestAddress;
 import com.scg.util.TimeCardListUtilTest;
 
+import test.Assignment06Test;
+
 
 
 
@@ -33,7 +35,8 @@ public class TestRunner {
     		  NameTest.class,
     		  TestAddress.class,
     		  DateRangeTest.class,
-    		  TimeCardListUtilTest.class);
+    		  TimeCardListUtilTest.class,
+    		  Assignment06Test.class);
 
       for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());

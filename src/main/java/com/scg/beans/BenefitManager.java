@@ -26,8 +26,7 @@ public class BenefitManager implements EventListener, PropertyChangeListener {
 	public void propertyChange(PropertyChangeEvent evt) {
 		final String proName = evt.getPropertyName();
 		final int oldValue = (Integer) evt.getOldValue();
-		final int newValue = (Integer) evt.getNewValue();
-		
+		final int newValue = (Integer) evt.getNewValue();		
 		log.info( proName + " changed from "+ oldValue + " to " + newValue + " for " +((StaffConsultant) evt.getSource()).getName());
 	}
 

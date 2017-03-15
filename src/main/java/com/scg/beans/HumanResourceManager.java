@@ -71,7 +71,7 @@ public class HumanResourceManager {
 	public void terminate(Consultant c ) {
 		TerminationListener[] listeners = listenerList.getListeners(TerminationListener.class);
 		for ( TerminationListener tl : listeners ) {
-			tl.forcedTermination(new TerminationEvent(this,c,true));
+			tl.forcedTermination(new TerminationEvent(this,c,false));
 		}
 	}
 
@@ -94,10 +94,11 @@ public class HumanResourceManager {
 		TerminationListener [] listeners;
 		listeners = listenerList.getListeners( TerminationListener.class);
 				
-				for (TerminationListener listener : listeners)
+				for (TerminationListener listener : listeners) {
 					if(evnt.isVoluntary())
 						listener.voluntaryTermination(evnt);
 				else
 					listener.forcedTermination(evnt);
+				}
 	}
 }

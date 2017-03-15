@@ -103,7 +103,7 @@ public class StaffConsultant extends Consultant implements Serializable, Compara
 	public void setVacationHours(int vacationHours) {
 		final int oldHours = this.vacationHours;
 		this.vacationHours = vacationHours;
-		pcs.firePropertyChange(VACTION_HOURS_PROPERTY_NAME,oldHours,sickLeaveHours);
+		pcs.firePropertyChange(VACTION_HOURS_PROPERTY_NAME,oldHours,vacationHours);
 	}
 	
 	/**

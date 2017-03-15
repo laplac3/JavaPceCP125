@@ -14,13 +14,15 @@ public class Eeoc implements EventListener, TerminationListener {
 	
 	@Override
 	public void voluntaryTermination(TerminationEvent evt) {
-		final String msg = String.format("The consultant %s has quit.", ((StaffConsultant)evt.getSource()).getName());
+		final String con = ((StaffConsultant)evt.getSource()).getName().toString(); 
+		final String msg = String.format("The consultant %s has quit.", con);
 		log.info(msg);
 	}
 
 	@Override
 	public void forcedTermination(TerminationEvent evt) {
-		final String msg = String.format("The consultant %s was fired.", ((StaffConsultant)evt.getSource()).getName());
+		final String con = ((StaffConsultant)evt.getSource()).getName().toString(); 
+		final String msg = String.format("The consultant %s was fired.", con);
 		log.info(msg);
 		
 	}

@@ -26,7 +26,7 @@ public final class TerminationEvent extends EventObject implements Serializable 
 	 * Constructor.
 	 * @param source - the event source.
 	 * @param consultant - the consultant being terminated.
-	 * @param voluntary - was the termination voluntary. 
+	 * @param voluntary - was the termination voluntary.  
 	 */
 	public TerminationEvent(Object source, Consultant consultant, boolean voluntary) {
 		super(source);

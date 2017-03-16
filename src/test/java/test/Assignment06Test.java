@@ -186,7 +186,7 @@ public final class Assignment06Test {
             final StaffConsultant consultant = iter.next();
             hrServer.acceptResignation(consultant);
         }
-
+        
         assertEquals(1, watchDog.voluntaryTerminationCount());
         if (iter.hasNext()) {
             final StaffConsultant consultant = iter.next();

@@ -51,7 +51,7 @@ public class StaffConsultant extends Consultant implements Serializable, Compara
 	 * @param rate - pay rate in cents.
 	 * @param sickLeave - hours of sick leave.
 	 * @param vacationHours - hours of vacation time.
-	 */
+	 */ 
 	public StaffConsultant(Name name,int payRate, int sickLeaveHours, int vacationHours) {
 		super(name);
 		this.payRate = payRate;

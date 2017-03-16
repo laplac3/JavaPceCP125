@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BenefitManager implements EventListener, PropertyChangeListener {
 
-	/**
+	/** 
 	 * Constructor 
 	 */
 	public BenefitManager() {

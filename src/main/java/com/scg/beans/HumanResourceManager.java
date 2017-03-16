@@ -27,7 +27,7 @@ public class HumanResourceManager {
 	public void adjustPayRate(StaffConsultant c, int newPayRate ) {
 		try { 
 			if ( log.isInfoEnabled() ) {
-					double percentChange = Math.abs(newPayRate - c.getPayRate())*100/c.getPayRate();
+					double percentChange = Math.abs(newPayRate - c.getPayRate())*10000.0/c.getPayRate()/100;
 					final String msg = "Percent change is =" + percentChange ;
 					log.info (msg);
 			}
@@ -51,7 +51,7 @@ public class HumanResourceManager {
 	 * Sets the sick leave hours for a staff consultant. 
 	 * @param c - the staff consultant
 	 * @param newSickLeaveHours - the new sick leave hours.
-	 */
+	 */ 
 	public void adjustSickLeaveHours(StaffConsultant c, int newSickLeaveHours ) {
 		c.setSickLeaveHours(newSickLeaveHours);
 	}

@@ -4,7 +4,7 @@
   <groupId>com.scg</groupId>
   <artifactId>cp125</artifactId>
   <packaging>jar</packaging>
-  <version>06</version>
+  <version>07</version>
   <name>cp125</name>
   
   <prerequisites>
@@ -16,7 +16,22 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+<repositories>
+  <repository>
+    <id>cp125-repository</id>
+    <name>Repository for CP125</name>
+    <url>https://faculty.washington.edu/rmoul/repository</url>
+  </repository>
+</repositories>
+
   <dependencies>
+  
+    <dependency>
+      <groupId>edu.uw.ext</groupId>
+      <artifactId>cp125-support</artifactId>
+      <version>1.0</version>
+    </dependency> 
+  
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

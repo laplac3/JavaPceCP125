@@ -2,6 +2,7 @@ package com.scg.persistent;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -12,7 +13,9 @@ import com.scg.domain.ConsultantTime;
 import com.scg.domain.Invoice;
 import com.scg.domain.NonBillableAccount;
 import com.scg.domain.TimeCard;
+import com.scg.util.Address;
 import com.scg.util.Name;
+import com.scg.util.StateCode;
 
 /**
  * @author Neil Nevitt 
@@ -87,6 +90,7 @@ public final class DbServer {
 				+ conName.getMidleName() + "')";
 		stat.execute(command);
 		}
+		
 	}
 	
 	/**
@@ -99,9 +103,6 @@ public final class DbServer {
 		try ( Connection conn = DriverManager.getConnection(this.dbUrl,this.username,this.password) ) {
 		Statement stat = conn.createStatement();
 		ResultSet rs;
-//		conn.setAutoCommit(false);
-//		System.out.println(conn.getAutoCommit());
-		
 		
 		Name name = timeCard.getConsultant().getName();
 		String  id_consultant_command = "SELECT id FROM consultants WHERE" 
@@ -134,12 +135,10 @@ public final class DbServer {
 		nonBillableHours( timeCard, timeCard_id, clientSQL, conn);
 		}
 		
-
-
-
 	}
 	
-	private void billableHours(TimeCard timeCard, int timecard_id , String sql, Connection conn) throws SQLException {
+	private void billableHours(TimeCard timeCard, int timecard_id , String sql, Connection conn)
+			throws SQLException {
 
 		Statement statQ = conn.createStatement();
 		Statement statE = conn.createStatement();
@@ -167,7 +166,8 @@ public final class DbServer {
 		
 	}
 	
-	private void nonBillableHours( TimeCard timeCard, int timecard_id , String clientSQL, Connection conn) throws SQLException{
+	private void nonBillableHours( TimeCard timeCard, int timecard_id , String clientSQL, Connection conn)
+			throws SQLException{
 
 		Statement statQ = conn.createStatement();
 		Statement statE = conn.createStatement();
@@ -199,7 +199,31 @@ public final class DbServer {
 	 * @throws SQLException - if any database operation fails.
 	 */
 	public List<ClientAccount> getClients() throws SQLException {
-		return null;
+		try ( Connection conn = DriverManager.getConnection(this.dbUrl,this.username,this.password) ) {
+			Statement stat = conn.createStatement();
+			ResultSet rs;
+			
+			List<ClientAccount> clients = new ArrayList<>();
+			String sql = "SELECT name, street," 
+					+ " city, state, postal_code,contact_last_name," 
+					+ " contact_first_name, contact_middle_name " 
+					+ "FROM clients";
+
+			rs = stat.executeQuery(sql);
+			
+			while( rs.next() ) {
+				String name = rs.getString(1);
+				String street = rs.getString(2);
+				String city = rs.getString(3);
+				StateCode state = StateCode.valueOf(rs.getString(4));
+				String zip = rs.getString(5);
+				Address address = new Address( street, city, state, zip );
+				Name consultantName = new Name (rs.getString(6), rs.getString(7), rs.getString(8) );
+				clients.add(new ClientAccount(name, consultantName, address ) );
+			}
+			
+			return clients;	
+		}
 	}
 	
 	/**
@@ -208,7 +232,22 @@ public final class DbServer {
 	 * @throws SQLException - if any database operation fails.
 	 */
 	public List<Consultant> getConsultant() throws SQLException {
-		return null;
+		try ( Connection conn = DriverManager.getConnection(this.dbUrl,this.username,this.password) ) {
+			Statement stat = conn.createStatement();
+			ResultSet rs;
+			
+			List<Consultant> consultants = new ArrayList<>();
+			String sql = "SELECT last_name, first_name, middle_name FROM consultants";
+			
+			rs = stat.executeQuery(sql);
+			while (rs.next() ) {
+				String lastName = rs.getString(1);
+				String firstName = rs.getString(2);
+				String middleName = rs.getString(3);
+				consultants.add(new Consultant(new Name(lastName, firstName, middleName)) );
+			}
+			return consultants;
+		}
 	}
 	
 	/**
@@ -220,6 +259,6 @@ public final class DbServer {
 	 * @throws SQLException - if any database operation fails.
 	 */
 	public Invoice getInvoice(ClientAccount client, java.time.Month month, int year ) throws SQLException {
-	return null;	
+		return null;
 	}
 }

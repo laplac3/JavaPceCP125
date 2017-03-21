@@ -16,9 +16,7 @@ import org.slf4j.LoggerFactory;
  * Initialize and or populate the database.
  */
 public class InitDb {
-	
-	
-	
+		
 	private static final String DATABASE_PROPERTY = "jdbc:derby://localhost:1527/memory:scgDb";
 	private static final String USERNAME_PROPERTY = "student";
 	private static final String PASSWORD_PROPERTY = "student";

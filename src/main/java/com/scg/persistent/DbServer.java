@@ -11,9 +11,12 @@ import com.scg.domain.ClientAccount;
 import com.scg.domain.Consultant;
 import com.scg.domain.ConsultantTime;
 import com.scg.domain.Invoice;
+import com.scg.domain.InvoiceLineItem;
 import com.scg.domain.NonBillableAccount;
+import com.scg.domain.Skill;
 import com.scg.domain.TimeCard;
 import com.scg.util.Address;
+import com.scg.util.DateRange;
 import com.scg.util.Name;
 import com.scg.util.StateCode;
 
@@ -259,6 +262,63 @@ public final class DbServer {
 	 * @throws SQLException - if any database operation fails.
 	 */
 	public Invoice getInvoice(ClientAccount client, java.time.Month month, int year ) throws SQLException {
-		return null;
+		try ( Connection conn = DriverManager.getConnection(this.dbUrl,this.username,this.password) ) {
+			Statement statQ = conn.createStatement();
+			ResultSet rsQ;
+			String sql;
+			int client_id = 0;
+			int timecard_id = 0;
+			int consultant_id = 0;
+			LocalDate date;
+			Consultant consultant = null;
+			Skill skill = null;
+			int hours = 0;
+			Invoice invoice = new Invoice(client, month, year);
+			
+			
+			sql = "SELECT id FROM clients WHERE name= '" + client.getName() + "'";
+			rsQ = statQ.executeQuery(sql);
+			while ( rsQ.next() ) {
+				client_id = rsQ.getInt(1);
+			}
+			
+			String sqlBillable = "SELECT timecard_id, date, skill, hours FROM billable_hours WHERE client_id = " + client_id;
+			Statement statBillable = conn.createStatement();
+			ResultSet rsBillable = statBillable.executeQuery(sqlBillable);
+			while ( rsBillable.next() ) {
+				timecard_id = rsBillable.getInt(1);
+				
+				
+				//get consultant id
+				sql = "SELECT consultant_id FROM timecards WHERE id = " + timecard_id;
+				rsQ =  statQ.executeQuery(sql);
+				while ( rsQ.next() ) {
+					consultant_id = rsQ.getInt(1);
+				}
+				
+				//consultant
+				sql = "SELECT last_name, first_name, middle_name FROM consultants WHERE id = " + consultant_id;
+				rsQ = statQ.executeQuery(sql);
+				while (rsQ.next() ) {
+					String lastName = rsQ.getString(1);
+					String firstName = rsQ.getString(2);
+					String middleName = rsQ.getString(3);
+					consultant = new Consultant(new Name(lastName, firstName, middleName));
+				}
+
+				String dateString = rsBillable.getString(2);
+				LocalDate dateLine = LocalDate.parse(dateString);
+				skill = Skill.valueOf((rsBillable.getString(3)));
+				hours = rsBillable.getInt(4);
+				InvoiceLineItem lineItem = new InvoiceLineItem(dateLine, consultant, skill, hours);
+				DateRange range = new DateRange(month,year);	
+				if ( range.isInRange(dateLine) )
+					invoice.addLineItem(lineItem);
+			}
+			
+
+			
+			return invoice;
+		}
 	}
 }

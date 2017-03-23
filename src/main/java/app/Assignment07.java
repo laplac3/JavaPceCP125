@@ -32,13 +32,22 @@ public final class Assignment07 {
 		List<ClientAccount> clients = serv.getClients();
 		List<Consultant> consultants = serv.getConsultant();
 		List<Invoice> invoices = new ArrayList<>();
-//		for ( ClientAccount client : clients)
-//			System.out.println(client.getName());
-//		for ( Consultant consultant : consultants )
-//			System.out.println(consultant.getName());
+		System.out.println("=================================================================================");
+		System.out.println("================Clients==========================================================");
+		System.out.println("=================================================================================");
 		for ( ClientAccount client : clients) {
+			System.out.println(client.getName());
 			 invoices.add( serv.getInvoice(client, month, year));
 		}
+		System.out.println("=================================================================================");
+		System.out.println("================Consultants======================================================");
+		System.out.println("=================================================================================");
+		for ( Consultant consultant : consultants )
+			System.out.println(consultant.getName());
+		System.out.println("=================================================================================");
+		System.out.println("====================Invoices=====================================================");
+		System.out.println("=================================================================================");
+
 		for ( Invoice invoice : invoices )
 			System.out.println(invoice.toReportString());
 	}

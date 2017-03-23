@@ -4,7 +4,6 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import com.scg.domain.ClientAccount;
@@ -40,6 +39,21 @@ public final class DbServer {
 	 */
 	private final String password;
 	
+	private PreparedStatement ps;
+	private ResultSet rs;
+	private int timeCard_id =0;
+	
+	
+	private final static String sqlAddClient = 
+			"INSERT INTO clients (name, street, city, state, postal_code,"
+					+ "contact_last_name, contact_first_name, contact_middle_name) " 
+					+ "VALUES (?,?,?,?,?,?,?,?)";
+	private static final String sqlAddConsultant = "INSERT INTO consultants " 
+					+ "(last_name, first_name, middle_name)"
+					+ "VALUES (?,?,?)";
+	private static final String sqlAddTimeCard = "INSERT INTO timecards (consultant_id, start_date) "
+			+ "VALUES (?,?)";
+	private static final String clientSQL = "SELECT id, name FROM clients";
 	/**
 	 * Constructor.
 	 * @param dbUrl - url for the database.
@@ -51,6 +65,7 @@ public final class DbServer {
 		this.dbUrl = dbUrl;
 		this.username = ussername;
 		this.password = password;
+		
 	}
 	
 	/**
@@ -61,19 +76,18 @@ public final class DbServer {
 	public void addClient(ClientAccount client) throws SQLException {
 		
 		try (Connection conn = DriverManager.getConnection(this.dbUrl,this.username,this.password) ) {
-		Statement stat = conn.createStatement(); //use prepraided connection and at end executUpdate()
-
-		String command = "INSERT INTO clients (name, street, city, state, postal_code, contact_last_name, contact_first_name, contact_middle_name) "
-				+ "VALUES ('" 
-				+ client.getName() +"', '" 
-				+ client.getAddress().getStreetNumbers() + "', '" 
-				+ client.getAddress().getCity() + "', '" 
-				+ client.getAddress().getState() + "', '" 
-				+ client.getAddress().getPostalCode() + "', '" 
-				+ client.getContact().getLastName() + "', '" 
-				+ client.getContact().getFirstName() + "', '" 
-				+ client.getContact().getMidleName()+ "')";
-		stat.execute(command);
+		
+		ps = conn.prepareStatement(sqlAddClient);
+		ps.setString(1, client.getName());
+		ps.setString(2,	client.getAddress().getStreetNumbers());
+		ps.setString(3, client.getAddress().getCity());
+		ps.setString(4, client.getAddress().getState().toString());
+		ps.setString(5, client.getAddress().getPostalCode());
+		ps.setString(6, client.getContact().getLastName());
+		ps.setString(7, client.getContact().getFirstName());
+		ps.setString(8, client.getContact().getMidleName());
+		ps.executeUpdate();
+		
 		}
 		
 	}
@@ -85,13 +99,13 @@ public final class DbServer {
 	 */
 	public void addConsultant(Consultant consultant ) throws SQLException {
 		try ( Connection conn = DriverManager.getConnection(this.dbUrl,this.username,this.password) ) {
-		Statement stat = conn.createStatement();
-		final Name conName = consultant.getName();
-		String command = "INSERT INTO consultants (last_name, first_name, middle_name)"
-				+ "VALUES ('" + conName.getLastName() 
-				+ "', '" + conName.getFirstName() + "', '" 
-				+ conName.getMidleName() + "')";
-		stat.execute(command);
+			ps = conn.prepareStatement(sqlAddConsultant);
+			final Name name = consultant.getName();
+			ps.setString(1, name.getLastName());
+			ps.setString(2, name.getFirstName());
+			ps.setString(3, name.getMidleName());
+			ps.executeUpdate();
+
 		}
 		
 	}
@@ -102,10 +116,9 @@ public final class DbServer {
 	 * @throws SQLException - if any database operation fails.
 	 */
 	public void addTimeCard(TimeCard timeCard ) throws SQLException {
-		int timeCard_id=0;
+		
 		try ( Connection conn = DriverManager.getConnection(this.dbUrl,this.username,this.password) ) {
 		Statement stat = conn.createStatement();
-		ResultSet rs;
 		
 		Name name = timeCard.getConsultant().getName();
 		String  id_consultant_command = "SELECT id FROM consultants WHERE" 
@@ -115,29 +128,30 @@ public final class DbServer {
 		rs =  stat.executeQuery(id_consultant_command);
 		
 		int consultant_id = 0;
-		LocalDate startDate = timeCard.getWeekStartingDay(); // must be sql date
+		String startDate = timeCard.getWeekStartingDay().toString();
 		while ( rs.next()) {
 				consultant_id = rs.getInt(1);
 		} 
 		
-		String command = "INSERT INTO timecards (consultant_id, start_date) "
-				+ "VALUES (" + consultant_id + ", '" + startDate + "')";
-		stat.execute(command);
+		ps = conn.prepareStatement(sqlAddTimeCard, Statement.RETURN_GENERATED_KEYS);
+		ps.setInt(1, consultant_id);
+		ps.setString(2, startDate);
+		ps.executeUpdate();
+		rs = ps.getGeneratedKeys();
+		rs.next();
+		timeCard_id = rs.getInt(1);
 		
-		String idTimeCardCommand = " SELECT id FROM timecards WHERE"
-				+ " consultant_id = " + consultant_id
-				+ " AND start_date = '" + startDate + "'";
-		rs = stat.executeQuery(idTimeCardCommand);
-		
-		while ( rs.next()) {
-			timeCard_id = rs.getInt(1);
-		} 
-		
-		String clientSQL = "SELECT id, name FROM clients";
 		billableHours( timeCard, timeCard_id, clientSQL , conn);
-		nonBillableHours( timeCard, timeCard_id, clientSQL, conn);
-		}
 		
+		
+		String sqlDateCheck = "SELECT date FROM non_billable_hours";
+		rs = stat.executeQuery(sqlDateCheck);
+
+		List<LocalDate> list = new ArrayList<>();
+		while ( rs.next() ) 
+			list.add(LocalDate.parse(rs.getString(1)));	
+		nonBillableHours( timeCard, timeCard_id, clientSQL, conn, list );	
+		}
 	}
 	
 	private void billableHours(TimeCard timeCard, int timecard_id , String sql, Connection conn)
@@ -169,7 +183,7 @@ public final class DbServer {
 		
 	}
 	
-	private void nonBillableHours( TimeCard timeCard, int timecard_id , String clientSQL, Connection conn)
+	private void nonBillableHours( TimeCard timeCard, int timecard_id , String clientSQL, Connection conn, List<LocalDate> list)
 			throws SQLException{
 
 		Statement statQ = conn.createStatement();
@@ -180,7 +194,7 @@ public final class DbServer {
 		while ( rsQ.next() ) {
 			List <ConsultantTime> nonBillableHours = 
 					timeCard.getConsultingHours().stream().filter(
-							e-> e.account.isBillable()==false).collect(Collectors.toList());
+							e-> e.account.isBillable()==false).filter(e->!list.contains(e.getDate())).collect(Collectors.toList());
 			
 			for ( ConsultantTime nonBillableHour : nonBillableHours ) {
 				
@@ -269,7 +283,6 @@ public final class DbServer {
 			int client_id = 0;
 			int timecard_id = 0;
 			int consultant_id = 0;
-			LocalDate date;
 			Consultant consultant = null;
 			Skill skill = null;
 			int hours = 0;
@@ -315,9 +328,7 @@ public final class DbServer {
 				if ( range.isInRange(dateLine) )
 					invoice.addLineItem(lineItem);
 			}
-			
 
-			
 			return invoice;
 		}
 	}

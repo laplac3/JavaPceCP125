@@ -38,8 +38,8 @@ public class InitDb {
         	serv.addClient(client);
         for ( final Consultant consultant : consultants )
         	serv.addConsultant(consultant);
-        for ( final TimeCard timeCard : timeCards ) {
+        for ( final TimeCard timeCard : timeCards ) 
         	serv.addTimeCard(timeCard);
-        }
+        
 	}
 }

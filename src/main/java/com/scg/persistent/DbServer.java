@@ -194,7 +194,7 @@ public final class DbServer {
 		while ( rsQ.next() ) {
 			List <ConsultantTime> nonBillableHours = 
 					timeCard.getConsultingHours().stream().filter(
-							e-> e.account.isBillable()==false).filter(e->!list.contains(e.getDate())).collect(Collectors.toList());
+							e-> !e.account.isBillable()).filter(e->!list.contains(e.getDate())).collect(Collectors.toList());
 			
 			for ( ConsultantTime nonBillableHour : nonBillableHours ) {
 				

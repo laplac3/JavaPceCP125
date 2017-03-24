@@ -4,7 +4,7 @@
   <groupId>com.scg</groupId>
   <artifactId>cp125</artifactId>
   <packaging>jar</packaging>
-  <version>07</version>
+  <version>08</version>
   <name>cp125</name>
   
   <prerequisites>

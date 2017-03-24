@@ -6,7 +6,7 @@ Start the server
  
 In a new window use to build and execute code
 mvn clean compile
-mvn exec:java -Dexec.mainClass=app.InitDb
+ 
+mvn -q exec:java -Dexec.mainClass=app.Assignment08Server
 
-To generate the invoice from db
-mvn exec:java -Dexec.mainClass=app.Assignment07
+mvn -q exec:java -Dexec.mainClass=app.Assignment08

@@ -2,14 +2,12 @@ package com.scg.net.cmd;
 
 import com.scg.domain.TimeCard;
 
+@SuppressWarnings("serial")
 public final class AddTimeCardCommand extends AbstractCommand<TimeCard>{
 
 	
 	
-	/**
-	 * Version Id.
-	 */
-	private static final long serialVersionUID = -2481920279800353353L;
+
 
 	/**
 	 * Construct an AddTimeCard command with target.

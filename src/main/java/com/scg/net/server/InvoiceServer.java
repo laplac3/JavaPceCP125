@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.Reader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -73,7 +74,7 @@ public final class InvoiceServer implements Runnable {
 				log.info("InvoiceServer waiting for connection on port" + port);
 				try ( Socket client= serverSocket.accept() ) {
 					process(client);	
-				} catch ( IOException ex ) {
+				} catch (final SocketException ex ) {
 					log.error("Server error " + ex);
 				
 			} 
@@ -116,15 +117,16 @@ public final class InvoiceServer implements Runnable {
 			ObjectInputStream inStrmObj = new ObjectInputStream(inStrm);
 			final CommandProcessor cmdProc =new CommandProcessor(clientSocket, clientList, consultantList, this);
 			while (true ) {
-				if ( inStrmObj == null ) {
+				if ( inStrmObj != null ) {
 					clientSocket.close();			
-				} else if ( inStrmObj instanceof Command<?>) { 
+				} else if ( inStrmObj instanceof Command<?> ) { 
 					Command<?> command = (Command<?>)inStrmObj;
 					log.info(inStrmObj.toString());
 					command.setReceiver(cmdProc);
 					command.execute();
 				} else {
 					log.warn( String.format("recieved non command %s", inStrmObj.getClass().getSimpleName()));
+					
 				} 
 			}
 			

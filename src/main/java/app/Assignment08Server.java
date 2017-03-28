@@ -9,7 +9,7 @@ import com.scg.domain.TimeCard;
 import com.scg.net.server.InvoiceServer;
 import com.scg.util.ListFactory;
 
-public class Assignment08server {
+public class Assignment08Server {
 	
 	private final static int port = 10880;
 	
@@ -21,6 +21,7 @@ public class Assignment08server {
 
         InvoiceServer serv = new InvoiceServer( port, accounts, consultants, "target/server" );
         serv.run();
+       
         
 	}
 }

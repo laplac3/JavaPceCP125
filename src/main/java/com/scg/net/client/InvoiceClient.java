@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,11 +94,18 @@ public final class InvoiceClient {
 	 * @param out - output stream connecting this client to the server.
 	 */
 	public void sendConsultant( ObjectOutputStream out ) {
+
+		List<Consultant> list= new ArrayList<>();
 		for ( TimeCard timeCard : timeCardList ) {
 			Consultant consultant = timeCard.getConsultant();
-			final AddConsultantCommand command = new AddConsultantCommand(consultant);
-			sendCommand(out,command);
+			if (!list.contains(consultant)){
+				list.add(consultant);
+				final AddConsultantCommand command = new AddConsultantCommand(consultant);
+				sendCommand(out,command);
+				//System.out.println(consultant);
+			}
 		}
+
 	}
 	
 	/**
@@ -106,6 +116,7 @@ public final class InvoiceClient {
 		for (TimeCard timeCard : timeCardList ) {
 			final AddTimeCardCommand command = new AddTimeCardCommand(timeCard);
 			sendCommand(out,command);
+			//System.out.println(timeCard.toReportString());
 		}
 	}
 	
@@ -132,6 +143,7 @@ public final class InvoiceClient {
 	 */
 	public void createInvoice(ObjectOutputStream out, java.time.Month month, int year) {
 		final CreateInvoiceCommand command = new CreateInvoiceCommand(LocalDate.of(year, month, 1));
+		
 		sendCommand(out,command);
 		
 	}

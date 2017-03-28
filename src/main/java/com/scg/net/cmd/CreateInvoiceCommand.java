@@ -4,12 +4,9 @@ import java.time.LocalDate;
 
 import com.scg.domain.Invoice;
 
+@SuppressWarnings("serial")
 public final class CreateInvoiceCommand extends AbstractCommand<LocalDate> {
 
-	/**
-	 * Version Id.
-	 */
-	private static final long serialVersionUID = -58883860440228353L;
 
 	/**
 	 * Construct a addInvoiceCommand for target.

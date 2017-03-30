@@ -14,6 +14,7 @@ import com.scg.domain.InvoiceLineItem;
 import com.scg.domain.NonBillableAccount;
 import com.scg.domain.Skill;
 import com.scg.domain.TimeCard;
+import com.scg.net.cmd.AddConsultantCommand;
 import com.scg.util.Address;
 import com.scg.util.DateRange;
 import com.scg.util.Name;
@@ -131,7 +132,7 @@ public final class DbServer {
 		String startDate = timeCard.getWeekStartingDay().toString();
 		while ( rs.next()) {
 				consultant_id = rs.getInt(1);
-		} 
+		}  
 		
 		ps = conn.prepareStatement(sqlAddTimeCard, Statement.RETURN_GENERATED_KEYS);
 		ps.setInt(1, consultant_id);
@@ -182,7 +183,16 @@ public final class DbServer {
 		
 		
 	}
-	
+//	builds a list of unique entries.  Might work for non billable hours with the use of a object.
+//	List<Consultant> list= new ArrayList<>();
+//	for ( TimeCard timeCard : timeCardList ) {
+//		Consultant consultant = timeCard.getConsultant();
+//		if (!list.contains(consultant)){
+//			list.add(consultant);
+//			final AddConsultantCommand command = new AddConsultantCommand(consultant);
+//			sendCommand(out,command);
+//			//System.out.println(consultant);
+//		}
 	private void nonBillableHours( TimeCard timeCard, int timecard_id , String clientSQL, Connection conn, List<LocalDate> list)
 			throws SQLException{
 
@@ -190,7 +200,7 @@ public final class DbServer {
 		Statement statE = conn.createStatement();
 		ResultSet rsQ;
 
-		rsQ = statQ.executeQuery(clientSQL);
+		rsQ = statQ.executeQuery(clientSQL); 
 		while ( rsQ.next() ) {
 			List <ConsultantTime> nonBillableHours = 
 					timeCard.getConsultingHours().stream()

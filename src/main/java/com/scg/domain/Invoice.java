@@ -94,10 +94,10 @@ public final class Invoice {
 	 */
 	private static final String businessZip;
 	/**
-	 * State code of business.
+	 * State code of business. 
 	 */
 	private static final String businessState;
-
+ 
 	static {
 		final Properties invoiceProps = new Properties();
 		try ( InputStream in = Invoice.class.getResourceAsStream(PROP_FILE_NAME)) {
@@ -132,7 +132,7 @@ public final class Invoice {
 		this.invoiceDate = LocalDate.now();
 		this.startDate = LocalDate.of(invoiceYear, invoiceMonth, 1);
 	}
-
+ 
 	/**
 	 * Getter for the client.
 	 * @return Returns the client for this invoice.

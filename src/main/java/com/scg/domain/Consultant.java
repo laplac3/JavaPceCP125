@@ -23,7 +23,7 @@ public class Consultant implements Comparable<Consultant>, Serializable {
 	 * The hash code.
 	 */
 	private int hashCode;
-	/**
+	/** 
 	 * Creates a new instance of consultant
 	 * @param name - The name of the consultant to set.
 	 */

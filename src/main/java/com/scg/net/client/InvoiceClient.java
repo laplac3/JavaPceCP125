@@ -1,6 +1,8 @@
 package com.scg.net.client;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -15,21 +17,24 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.scg.domain.ClientAccount;
 import com.scg.domain.Consultant;
 import com.scg.domain.TimeCard;
+import com.scg.net.cmd.AddClientCommand;
 import com.scg.net.cmd.AddConsultantCommand;
 import com.scg.net.cmd.AddTimeCardCommand;
 import com.scg.net.cmd.Command;
 import com.scg.net.cmd.CreateInvoiceCommand;
 import com.scg.net.cmd.DisconnectCommand;
 import com.scg.net.cmd.ShutdownCommand;
+import com.scg.util.Name;
 
 /**
  * @author Neil Nevitt
  * The client of the InvoiceServer.
  */
 public final class InvoiceClient {
-
+ 
 	private static final Logger log = LoggerFactory.getLogger("InvoiceClient");
 	/**
 	 * The host.
@@ -75,6 +80,8 @@ public final class InvoiceClient {
 			sendTimeCards(out);
 			LocalDate date = LocalDate.now();
 			createInvoice(out,date.getMonth(),date.getYear());
+			sendDisconnect(out, server);
+			sendShutdown(host,port);
 		} catch (IOException e) {
 			log.warn("Could not run send on connection",e);
 		}
@@ -86,25 +93,33 @@ public final class InvoiceClient {
 	 */
 	public void sendClients( ObjectOutputStream out ) {
 		
-		//sendCommand(out,command);
+
+
 	}
-	
+
 	/**
 	 * Send the consultant to the server.
 	 * @param out - output stream connecting this client to the server.
 	 */
 	public void sendConsultant( ObjectOutputStream out ) {
+		
 
-		List<Consultant> list= new ArrayList<>();
-		for ( TimeCard timeCard : timeCardList ) {
-			Consultant consultant = timeCard.getConsultant();
-			if (!list.contains(consultant)){
-				list.add(consultant);
-				final AddConsultantCommand command = new AddConsultantCommand(consultant);
-				sendCommand(out,command);
-				//System.out.println(consultant);
-			}
-		}
+
+		
+		
+
+		
+//		Uses time cards to get consultants.
+//		List<Consultant> list= new ArrayList<>();
+//		for ( TimeCard timeCard : timeCardList ) {
+//			Consultant consultant = timeCard.getConsultant();
+//			if (!list.contains(consultant)){
+//				list.add(consultant);
+//				final AddConsultantCommand command = new AddConsultantCommand(consultant);
+//				sendCommand(out,command);
+//				System.out.println(consultant);
+//			}
+//		}
 
 	}
 	
@@ -113,11 +128,11 @@ public final class InvoiceClient {
 	 * @param out - output stream connecting this client to the server.
 	 */
 	public void sendTimeCards( ObjectOutputStream out ) {
-		for (TimeCard timeCard : timeCardList ) {
-			final AddTimeCardCommand command = new AddTimeCardCommand(timeCard);
-			sendCommand(out,command);
-			//System.out.println(timeCard.toReportString());
-		}
+//		for (TimeCard timeCard : timeCardList ) {
+//			final AddTimeCardCommand command = new AddTimeCardCommand(timeCard);
+//			sendCommand(out,command);
+//				System.out.println(timeCard.toReportString());
+//		}
 	}
 	
 	/**
@@ -129,7 +144,8 @@ public final class InvoiceClient {
 		final DisconnectCommand command = new DisconnectCommand();
 		sendCommand(out,command);
 		try {
-			server.close();
+			server.shutdownOutput();
+			log.info("Disconnect sent.");
 		} catch (IOException e) {
 			log.warn("Unable to close connection.",e);
 		}
@@ -142,11 +158,11 @@ public final class InvoiceClient {
 	 * @param year - the year to create the invoice for.
 	 */
 	public void createInvoice(ObjectOutputStream out, java.time.Month month, int year) {
-		final CreateInvoiceCommand command = new CreateInvoiceCommand(LocalDate.of(year, month, 1));
 		
+		final CreateInvoiceCommand command = new CreateInvoiceCommand(LocalDate.of(year, month, 1));		
 		sendCommand(out,command);
 		
-	}
+	} 
 	/**
 	 * Send the quit command to the server.
 	 * @param host - the host for the server.

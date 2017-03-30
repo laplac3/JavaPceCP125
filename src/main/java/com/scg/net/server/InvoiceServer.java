@@ -25,7 +25,7 @@ import com.scg.net.cmd.Command;
  */
 public final class InvoiceServer implements Runnable {
 	
-	private static final Logger log = LoggerFactory.getLogger("InvoiceServer");
+	private static final Logger log = LoggerFactory.getLogger("InvoiceServer"); 
 	/**
 	 * The port for this server to listen on
 	 */
@@ -41,7 +41,7 @@ public final class InvoiceServer implements Runnable {
 	/**
 	 * The directory to be used for files output by commands
 	 */
-	private final String outputDirectoryName;
+	private static String outputDirectoryName;
 	private ServerSocket serverSocket =null;
 	/**
 	 * @param port - The port for this server to listen on.
@@ -55,10 +55,14 @@ public final class InvoiceServer implements Runnable {
 		this.port = port;
 		this.clientList = clientList;
 		this.consultantList = consultantList;
-		this.outputDirectoryName = outputDirectoryName;
+		InvoiceServer.outputDirectoryName = outputDirectoryName;
 
 	} 
 	
+	public static String getOutputDirectoryName() {
+		return outputDirectoryName;
+	}
+
 	/**
 	 * Run this server, establishing connections, receiving commands, and sending them to the CommandProcesser.
 	 */
@@ -70,6 +74,7 @@ public final class InvoiceServer implements Runnable {
 			log.info("New server Socket " 
 			+ serverSocket.getInetAddress().getHostName() 
 			+ ":" + serverSocket.getLocalPort() );
+			
 			while (!serverSocket.isClosed() ) {
 				log.info("InvoiceServer waiting for connection on port" + port);
 				try ( Socket client= serverSocket.accept() ) {
@@ -107,7 +112,7 @@ public final class InvoiceServer implements Runnable {
 		} catch ( IOException e) {
 			log.error("Could not shut down server",e);
 		}
-		
+		 
 	}
 	
 	private void process(Socket clientSocket ) { 
@@ -117,10 +122,10 @@ public final class InvoiceServer implements Runnable {
 			ObjectInputStream inStrmObj = new ObjectInputStream(inStrm);
 			final CommandProcessor cmdProc =new CommandProcessor(clientSocket, clientList, consultantList, this);
 			while (true ) {
-				if ( inStrmObj != null ) {
+				if ( inStrmObj == null ) {
 					clientSocket.close();			
-				} else if ( inStrmObj instanceof Command<?> ) { 
-					Command<?> command = (Command<?>)inStrmObj;
+				} else if ( inStrmObj.readObject() instanceof Command<?> ) { 
+					Command<?> command = (Command<?>)inStrmObj.readObject();
 					log.info(inStrmObj.toString());
 					command.setReceiver(cmdProc);
 					command.execute();
@@ -130,7 +135,7 @@ public final class InvoiceServer implements Runnable {
 				} 
 			}
 			
-		} catch (IOException ex ) {
+		} catch (IOException | ClassNotFoundException ex ) {
 			log.error("Error " + ex);
 		}
 	}

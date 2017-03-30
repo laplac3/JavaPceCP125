@@ -3,6 +3,7 @@ package com.scg.net.server;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ import com.scg.net.cmd.ShutdownCommand;
  * @author Neil Nevitt
  * The command processor for the invoice server. Implements the receiver role in the Command design pattern.
  */
-public final class CommandProcessor {
+public final class CommandProcessor { 
 	private static final Logger log = LoggerFactory.getLogger("CommandProcessor");
 	/**
 	 * The Socket connecting the server to the client.
@@ -38,11 +39,11 @@ public final class CommandProcessor {
 	/**
 	 * The ClientList to add Clients to.
 	 */
-	private List<ClientAccount> clientList;
+	private List<ClientAccount> clientList = new ArrayList<>();
 	/**
 	 * The ConsultantList to add Consultants to.
 	 */
-	private List<Consultant> consultantList;
+	private List<Consultant> consultantList = new ArrayList<>();
 	
 	private List<TimeCard> timeCardList = new ArrayList<>();
 	/**
@@ -50,9 +51,9 @@ public final class CommandProcessor {
 	 */
 	private InvoiceServer server;
 	
-	private String outputDirectoryName;
+	private String outputDirectoryName = "target/server";
 	
-	// create local time card lis
+	// create local time card lis 
 	
 	/**
 	 * Construct a CommandProcessor.
@@ -70,18 +71,17 @@ public final class CommandProcessor {
 		this.server = server;
 	}
 	
-	public void setOutputDirectoryName(String outputDirectoryName) {
-		this.outputDirectoryName = outputDirectoryName;
-	}
-
 	/**
 	 * Execute an AddClientCommand.
 	 * @param command - the command to execute.
 	 */
 	public void execute(AddClientCommand command) {
 		log.info( String.format("Added %s to the client list.", command.getTarget().getName()) );
-		clientList.add(command.getTarget());
-		
+		if (!clientList.contains(command.getTarget())) {
+			clientList.add(command.getTarget());
+//			for ( ClientAccount a : clientList )
+//				System.out.println(a.getName());
+		}
 	}
 
 	/**
@@ -90,8 +90,11 @@ public final class CommandProcessor {
 	 */
 	public void execute(AddConsultantCommand command) {
 		log.info(String.format("Added %s to the consultant list." , command.getTarget().toString() ));
-		consultantList.add(command.getTarget());
-		
+		if (!consultantList.contains(command.getTarget())) {
+			consultantList.add(command.getTarget());
+//			for ( Consultant c : consultantList )
+//				System.out.println(c.getName());
+		}
 	}
 
 	/**
@@ -100,7 +103,16 @@ public final class CommandProcessor {
 	 */
 	public void execute(AddTimeCardCommand command) {
 		log.info(String.format("Added a timecard to the timeCardlist for %s", command.getTarget().getConsultant()));
-		timeCardList.add(command.getTarget());
+
+		if ( !timeCardList.contains(command.getTarget())) {
+			timeCardList.add(command.getTarget());
+			for ( TimeCard card : timeCardList )
+				System.out.println(card.toReportString());
+		}
+		for ( Consultant c : consultantList )
+			System.out.println(c.getName());
+		for ( ClientAccount a : clientList )
+			System.out.println(a.getName());
 	}
 
 	/**
@@ -108,6 +120,8 @@ public final class CommandProcessor {
 	 * @param command - the command to execute.
 	 */
 	public void execute(CreateInvoiceCommand command) {
+		for ( ClientAccount a : clientList )
+			System.out.println(a.getName());
 		Invoice invoice = null;
 		LocalDate date = command.getTarget();
 		final DateTimeFormatter format = DateTimeFormatter.ofPattern("MMMMyyyy");
@@ -144,7 +158,13 @@ public final class CommandProcessor {
 	 * @param command - the input DisconnectCommand.
 	 */
 	public void execute(DisconnectCommand command) {
-		command.execute();
+
+		try {
+			connection.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -153,7 +173,8 @@ public final class CommandProcessor {
 	 * @param command - the input ShutdownCommand.
 	 */
 	public void execute(ShutdownCommand command) {	
-		command.execute();
+
+		server.shutDown();
 		
 	}
 

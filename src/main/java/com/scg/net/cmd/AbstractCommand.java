@@ -14,7 +14,7 @@ public abstract class AbstractCommand<T> implements Command<T> {
 	 * The target for the command.
 	 */
 	private T target;
-	/**
+	/** 
 	 * CommandProcessor will execute this command.
 	 */
 	protected transient CommandProcessor receiver;

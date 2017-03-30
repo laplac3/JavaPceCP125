@@ -19,6 +19,7 @@
 /Users/laplace/cs/cp125/src/main/java/com/scg/domain/InvoiceFooter.java
 /Users/laplace/cs/cp125/src/main/java/app/InitDb.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/beans/CompensationManager.java
+/Users/laplace/cs/cp125/src/main/java/app/Assignment08Server.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/net/cmd/CreateInvoiceCommand.java
 /Users/laplace/cs/cp125/src/main/java/app/Assignment05.java
 /Users/laplace/cs/cp125/src/main/java/app/Assignment08.java
@@ -40,5 +41,4 @@
 /Users/laplace/cs/cp125/src/main/java/com/scg/beans/BenefitManager.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/domain/ClientAccount.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/net/cmd/DisconnectCommand.java
-/Users/laplace/cs/cp125/src/main/java/app/Assignment08server.java
 /Users/laplace/cs/cp125/src/main/java/com/scg/persistent/DbServer.java

@@ -27,7 +27,7 @@ final class InvoiceHeader {
 	 * The month being billed.
 	 */
 	private LocalDate invoiceForMonth;
-
+ 
 	/**
 	 * Format of invoice. 
 	 */

@@ -17,7 +17,6 @@ import com.scg.util.Address;
 import com.scg.util.Name;
 import com.scg.util.StateCode;
 
-import app.Assignment04;
 
 /**
  * @author Neil

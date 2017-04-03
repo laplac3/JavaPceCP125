@@ -2,25 +2,28 @@ package com.scg.net.cmd;
 
 import com.scg.domain.TimeCard;
 
+/**
+ * Command that adds a TimeCard to the server's list of TimeCards.
+ *
+ * @author Russ Moul and Neil Nevitt
+ */
 @SuppressWarnings("serial")
-public final class AddTimeCardCommand extends AbstractCommand<TimeCard>{
+public final class AddTimeCardCommand extends AbstractCommand<TimeCard> {
 
-	
-	
+    /**
+     * Construct an AddTimeCardCommand with a target.
+     *
+     * @param target the target of this Command.
+     */
+    public AddTimeCardCommand(final TimeCard target) {
+        super(target);
+    }
 
-
-	/**
-	 * Construct an AddTimeCard command with target.
-	 * @param target - The target of this command.
-	 */
-	public AddTimeCardCommand(final TimeCard target) {
-		super(target);
-	
-	}
-	@Override
-	public void execute() {
-		receiver.execute(this); 
-		
-	}
-
+    /**
+     * Execute this command by calling receiver.execute(this).
+     */
+    @Override
+    public void execute() {
+        getReceiver().execute(this);
+    }
 }

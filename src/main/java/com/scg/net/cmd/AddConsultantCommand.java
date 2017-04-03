@@ -3,29 +3,27 @@ package com.scg.net.cmd;
 import com.scg.domain.Consultant;
 
 /**
- * @author Neil Nevitt.
  * The command to add a Consultant to a list maintained by the server.
+ *
+ * @author Russ Moul and Neil Nevitt
  */
+@SuppressWarnings("serial")
 public final class AddConsultantCommand extends AbstractCommand<Consultant> {
 
-	/**
-	 * Serial version.
-	 */
-	private static final long serialVersionUID = 8570132430635422490L;
+    /**
+     * Construct an AddConsultantCommand with a target.
+     *
+     * @param target The target of this Command.
+     */
+    public AddConsultantCommand(final Consultant target) {
+        super(target);
+    }
 
-
-	/**
-	 * Construct an AddConsultantCommand with a target.
-	 * @param target - The target of this command.
-	 */
-	public AddConsultantCommand(Consultant target) {
-		super(target);
-		
-	}
-	@Override
-	public void execute() {
-		receiver.execute(this);
-		
-	}
-
+    /**
+     * Execute this Command by calling receiver.execute(this).
+     */
+    @Override
+    public void execute() {
+        getReceiver().execute(this);
+    }
 }

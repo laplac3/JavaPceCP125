@@ -1,18 +1,11 @@
 package com.scg.net.client;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,171 +17,195 @@ import com.scg.net.cmd.AddClientCommand;
 import com.scg.net.cmd.AddConsultantCommand;
 import com.scg.net.cmd.AddTimeCardCommand;
 import com.scg.net.cmd.Command;
-import com.scg.net.cmd.CreateInvoiceCommand;
+import com.scg.net.cmd.CreateInvoicesCommand;
 import com.scg.net.cmd.DisconnectCommand;
 import com.scg.net.cmd.ShutdownCommand;
+import com.scg.util.Address;
 import com.scg.util.Name;
+import com.scg.util.StateCode;
 
 /**
- * @author Neil Nevitt
  * The client of the InvoiceServer.
+ *
+ * @author Russ Moul and Neil Nevitt
  */
 public final class InvoiceClient {
- 
-	private static final Logger log = LoggerFactory.getLogger("InvoiceClient");
-	/**
-	 * The host.
-	 */
-	private final String host;
-	/**
-	 * The port.
-	 */
-	private final int port;
-	/**
-	 * List of timeCards.
-	 */
-	private List<TimeCard> timeCardList;
-	
-	/**
-	 * Constructor for the invoice client with host and port for the server.
-	 * @param host - The host for the server.
-	 * @param port - The port for the server.
-	 * @param timeCardList - List of timecards to send to the server.
-	 */
-	public InvoiceClient(String host, int port, List<TimeCard> timeCardList) {
-		super();
-		this.host = host;
-		this.port = port;
-		this.timeCardList = timeCardList;
-	}
-	/**
-	 * Runs this InvoiceClient, sending clients consultant and time cards to the server, 
-	 * then sending the command to create invoice for the specific month.
-	 */
-	public void run() {
-		ObjectOutputStream out =null;
-		try ( Socket server = new Socket(host, port); ) {
-			System.out.println(String.format("Connection to server at: %s%s:%d",
-					server.getInetAddress().getHostName(),
-					server.getInetAddress().getHostAddress(),
-					server.getPort()));
-			server.shutdownInput();
-			out = new ObjectOutputStream(server.getOutputStream());
-			sendClients(out);
-			sendConsultant(out);
-			out.writeObject("NOT_A_COMMAND");
-			sendTimeCards(out);
-			LocalDate date = LocalDate.now();
-			createInvoice(out,date.getMonth(),date.getYear());
-			sendDisconnect(out, server);
-			sendShutdown(host,port);
-		} catch (IOException e) {
-			log.warn("Could not run send on connection",e);
-		}
-	}
-	
-	/**
-	 * Send the clients to the server.
-	 * @param out - output stream connecting this client to the server.
-	 */
-	public void sendClients( ObjectOutputStream out ) {
-		
+    /** This class' logger. */
+    private static final Logger logger =
+                         LoggerFactory.getLogger(InvoiceClient.class);
 
+    /** The invoice month. */
+    private static final Month INVOICE_MONTH = Month.MARCH;
 
-	}
+    /** The invoice year. */
+    private static final int INVOICE_YEAR = 2006;
 
-	/**
-	 * Send the consultant to the server.
-	 * @param out - output stream connecting this client to the server.
-	 */
-	public void sendConsultant( ObjectOutputStream out ) {
-		
+   /** The host of the server. */
+    private final String host;
 
+    /** The port of the server. */
+    private final int port;
 
-		
-		
+    /** The list of time cards. */
+    private final List<TimeCard> timeCardList;
 
-		
-//		Uses time cards to get consultants.
-//		List<Consultant> list= new ArrayList<>();
-//		for ( TimeCard timeCard : timeCardList ) {
-//			Consultant consultant = timeCard.getConsultant();
-//			if (!list.contains(consultant)){
-//				list.add(consultant);
-//				final AddConsultantCommand command = new AddConsultantCommand(consultant);
-//				sendCommand(out,command);
-//				System.out.println(consultant);
-//			}
-//		}
+    /**
+     * Construct an InvoiceClient with a host and port for the server.
+     *
+     * @param host the host for the server.
+     * @param port the port for the server.
+     * @param timeCardList the list of timeCards to send to the server
+     */
+    public InvoiceClient(final String host, final int port, final List<TimeCard> timeCardList) {
+        this.host = host;
+        this.port = port;
+        this.timeCardList = timeCardList;
+    }
 
-	}
-	
-	/**
-	 * Send the time cards to the server.
-	 * @param out - output stream connecting this client to the server.
-	 */
-	public void sendTimeCards( ObjectOutputStream out ) {
-//		for (TimeCard timeCard : timeCardList ) {
-//			final AddTimeCardCommand command = new AddTimeCardCommand(timeCard);
-//			sendCommand(out,command);
-//				System.out.println(timeCard.toReportString());
-//		}
-	}
-	
-	/**
-	 * Send the Disconnect command to the server.
-	 * @param out - the output stream connecting this client to the server.
-	 * @param server - the connection to be closed after sending disconnect.
-	 */
-	public void sendDisconnect(ObjectOutputStream out, Socket server ) {
-		final DisconnectCommand command = new DisconnectCommand();
-		sendCommand(out,command);
-		try {
-			server.shutdownOutput();
-			log.info("Disconnect sent.");
-		} catch (IOException e) {
-			log.warn("Unable to close connection.",e);
-		}
-	}
-	
-	/**
-	 * Send command to the server to create the invoice for a specific month.
-	 * @param out - the output stream connecting this client to the server. 
-	 * @param month - the month to create the invoice for.
-	 * @param year - the year to create the invoice for.
-	 */
-	public void createInvoice(ObjectOutputStream out, java.time.Month month, int year) {
-		
-		final CreateInvoiceCommand command = new CreateInvoiceCommand(LocalDate.of(year, month, 1));		
-		sendCommand(out,command);
-		
-	} 
-	/**
-	 * Send the quit command to the server.
-	 * @param host - the host for the server.
-	 * @param port - the port for the server.
-	 */
-	public void sendShutdown( String host, int port ) {
-		try (Socket server =new Socket(host, port) ) {
-			System.out.println(String.format("Quit connection to server at: %s%s:%d", 
-					server.getInetAddress().getHostName(),
-					server.getInetAddress().getHostAddress(),
-					server.getPort()));
-			ObjectOutputStream out = new ObjectOutputStream(server.getOutputStream());
-			server.shutdownInput();
-			final ShutdownCommand command = new ShutdownCommand();
-			sendCommand(out,command);
-		} catch (IOException e) {
-			log.error("Connect and send quit command",e);
-		}
-	}
-	
-	private static void sendCommand(ObjectOutputStream out, Command<?> command) {
-		try {
-			out.writeObject(command);
-			out.flush();
-		} catch ( IOException ex ) {
-			log.error("Bad command unable to execute.",ex);
-		}
-	}
+    /**
+     * Runs this InvoiceClient, sending clients, consultants, and time cards to
+     * the server, then sending the command to create invoices for a specified
+     * month.
+     */
+    public void run() {
+        ObjectOutputStream out = null;
+        try (Socket server = new Socket(host, port);) {
+            System.out.println(String.format("Connected to server at: %s/%s:%d",
+                    server.getInetAddress().getHostName(),
+                    server.getInetAddress().getHostAddress(), server.getPort()));
+            // We don't expect to get any input so shut it down.
+            server.shutdownInput();
+            out = new ObjectOutputStream(server.getOutputStream());
+            sendClients(out);
+            sendConsultants(out);
+            // make sure we can handle unknown commands
+            out.writeObject("NOT_A_COMMAND");
+            sendTimeCards(out);
+            createInvoices(out, INVOICE_MONTH, INVOICE_YEAR);
+            sendDisconnect(out, server);
+            //server.shutdownOutput();
+        } catch (final IOException ex) {
+            logger.error("Unable to connect to server.", ex);
+        }
+    }
+
+    /**
+     * Send the clients to the server.
+     *
+     * @param out the output stream connecting this client to the server.
+     */
+    public void sendClients(final ObjectOutputStream out) {
+        AddClientCommand command = null;
+
+        // Send new accounts
+        ClientAccount client = new ClientAccount("Gotbucks Technologies",
+                               new Name("Gotbucks", "Horatio", "$"),
+                               new Address("1040 Yellow Brick Road", "Golden", StateCode.NY, "91234"));
+        command = new AddClientCommand(client);
+        sendCommand(out, command);
+
+        client = new ClientAccount("Nanosoft",
+                 new Name("Bridges", "Betty", "S."),
+                 new Address("1 Fiber Lane", "Brightville", StateCode.WA, "98234"));
+        command = new AddClientCommand(client);
+        sendCommand(out, command);
+    }
+
+    /**
+     * Send the consultants to the server.
+     *
+     * @param out the output stream connecting this client to the server.
+     */
+    public void sendConsultants(final ObjectOutputStream out) {
+        AddConsultantCommand command = null;
+
+        // Send new consultants
+        command = new AddConsultantCommand(new Consultant(
+                  new Name("Jones", "FooBar", "Q.")));
+        sendCommand(out, command);
+
+        command = new AddConsultantCommand(new Consultant(
+                new Name("Bug", "Don", "D.")));
+        sendCommand(out, command);
+    }
+
+    /**
+     * Send the time cards to the server.
+     *
+     * @param out the output stream connecting this client to the server.
+     */
+    public void sendTimeCards(final ObjectOutputStream out) {
+        AddTimeCardCommand command = null;
+        for (final TimeCard timeCard : timeCardList) {
+            command = new AddTimeCardCommand(timeCard);
+            sendCommand(out, command);
+        }
+    }
+
+    /**
+     * Send the disconnect command to the server.
+     *
+     * @param out the output stream connecting this client to the server.
+     * @param server the connection to be closed after sending disconnect
+     */
+    public void sendDisconnect(final ObjectOutputStream out, final Socket server) {
+        final DisconnectCommand command = new DisconnectCommand();
+        sendCommand(out, command);
+        try {
+            server.close();
+        } catch (IOException e) {
+            logger.warn("Error closing socket.", e);
+        }
+    }
+
+    /**
+     * Send the command to the server to create invoices for the specified
+     * month.
+     *
+     * @param out the output stream connecting this client to the server.
+     * @param month the month to create invoice for
+     * @param year the year to create invoice for
+     */
+    public void createInvoices(final ObjectOutputStream out, final Month month, final int year) {
+        LocalDate date = LocalDate.of(year, month, 1);
+        final CreateInvoicesCommand command = new CreateInvoicesCommand(date);
+        sendCommand(out, command);
+    }
+
+    /**
+     * Send the quit command to the server.
+     * 
+     * @param host the host for the server.
+     * @param port the port for the server.
+     *
+     */
+    public static void sendShutdown(final String host, final int port) {
+        try (Socket server = new Socket(host, port);) {
+            System.out.println(String.format("Quit connected to server at: %s/%s:%d",
+                    server.getInetAddress().getHostName(),
+                    server.getInetAddress().getHostAddress(), server.getPort()));
+            ObjectOutputStream out = new ObjectOutputStream(server.getOutputStream());
+            server.shutdownInput();
+            final ShutdownCommand command = new ShutdownCommand();
+            sendCommand(out, command);
+            server.close();
+        } catch (final IOException ex) {
+            logger.error("Connect and send quit command.", ex);
+        }
+    }
+
+    /**
+     * Send a command to the server.
+     *
+     * @param out the output stream connecting this client to the server
+     * @param command the command to send
+     */
+    private static void sendCommand(final ObjectOutputStream out, final Command<?> command) {
+        try {
+            out.writeObject(command);
+            out.flush();
+        } catch (final IOException ex) {
+            logger.error("Unable to write command.", ex);
+        }
+    }
 }

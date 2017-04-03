@@ -1,17 +1,12 @@
 package com.scg.net.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
-import java.io.Reader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,123 +15,118 @@ import com.scg.domain.Consultant;
 import com.scg.net.cmd.Command;
 
 /**
- * @author Neil Nevitt
- *The server for creation of account invoices based on time cards sent from the client.
+ * The server for creation of account invoices based on time cards sent from the
+ * client.
+ *
+ * @author Russ Moul and Neil Nevitt
  */
-public final class InvoiceServer implements Runnable {
-	
-	private static final Logger log = LoggerFactory.getLogger("InvoiceServer"); 
-	/**
-	 * The port for this server to listen on
-	 */
-	private final int port;
-	/**
-	 * The list of clients.
-	 */
-	private List<ClientAccount> clientList;
-	/**
-	 * The list of consultants.
-	 */
-	private List<Consultant> consultantList;
-	/**
-	 * The directory to be used for files output by commands
-	 */
-	private static String outputDirectoryName;
-	private ServerSocket serverSocket =null;
-	/**
-	 * @param port - The port for this server to listen on.
-	 * @param clientList - the initial list of clients
-	 * @param consultantList - the initial list of consultants
-	 * @param outputDirectoryName - the directory to be used for files output by commands
-	 */
-	public InvoiceServer(int port, List<ClientAccount> clientList, List<Consultant> consultantList,
-			String outputDirectoryName) {
-		super();
-		this.port = port;
-		this.clientList = clientList;
-		this.consultantList = consultantList;
-		InvoiceServer.outputDirectoryName = outputDirectoryName;
+public class InvoiceServer {
+    /** The class' logger. */
+    private static final Logger logger =
+                         LoggerFactory.getLogger(InvoiceServer.class);
 
-	} 
-	
-	public static String getOutputDirectoryName() {
-		return outputDirectoryName;
-	}
+    /** The clients/accounts. */
+    private final List<ClientAccount> clientList;
 
-	/**
-	 * Run this server, establishing connections, receiving commands, and sending them to the CommandProcesser.
-	 */
-	public void run() {
+    /** The consultants. */
+    private final List<Consultant> consultantList;
 
-		
-		try (ServerSocket serverSocket = new ServerSocket(this.port)) {
-			this.serverSocket = serverSocket;
-			log.info("New server Socket " 
-			+ serverSocket.getInetAddress().getHostName() 
-			+ ":" + serverSocket.getLocalPort() );
-			
-			while (!serverSocket.isClosed() ) {
-				log.info("InvoiceServer waiting for connection on port" + port);
-				try ( Socket client= serverSocket.accept() ) {
-					process(client);	
-				} catch (final SocketException ex ) {
-					log.error("Server error " + ex);
-				
-			} 
-			
-		} 
-			
-		} catch (IOException e) {
-			log.error("IOException" + e);
-		} finally {
-			if ( serverSocket != null ) {
-				try {
-					serverSocket.close();
-					
-				} catch ( IOException ioex ) {
-					log.error("Error closing server socket. " + ioex);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Shut down the server.
-	 */
-	void shutDown() {
-		try {
-			if ( this.serverSocket != null && !this.serverSocket.isClosed() ) {
-				serverSocket.close();
-				log.info("Serve connection has been closed");
-			}
-		} catch ( IOException e) {
-			log.error("Could not shut down server",e);
-		}
-		 
-	}
-	
-	private void process(Socket clientSocket ) { 
-		try {
-			
-			InputStream inStrm = clientSocket.getInputStream();
-			ObjectInputStream inStrmObj = new ObjectInputStream(inStrm);
-			final CommandProcessor cmdProc =new CommandProcessor(clientSocket, clientList, consultantList, this);
-			while (true ) {
-				if ( inStrmObj == null ) {
-					clientSocket.close();			
-				} else if ( inStrmObj.readObject() instanceof Command<?> ) { 
-					Command<?> command = (Command<?>)inStrmObj.readObject();
-					log.info(inStrmObj.toString());
-					command.setReceiver(cmdProc);
-					command.execute();
-				} else {
-					log.warn( String.format("recieved non command %s", inStrmObj.getClass().getSimpleName()));
-					
-				} 
-			}
-			
-		} catch (IOException | ClassNotFoundException ex ) {
-			log.error("Error " + ex);
-		}
-	}
+    /** The server socket socket. */
+    private ServerSocket serverSocket = null;
+
+    /** The server socket port. */
+    private final int port;
+
+    /** The name of the directory to be used for files output by commands. */
+    private String outputDirectoryName = ".";
+
+    /**
+     * Construct an InvoiceServer with a port.
+     *
+     * @param port The port for this server to listen on
+     * @param clientList the initial list of clients
+     * @param consultantList the initial list of consultants
+     * @param outputDirectoryName the directory to be used for files output by commands
+     */
+    public InvoiceServer(final int port, final List<ClientAccount> clientList,
+                         final List<Consultant> consultantList,
+                         final String outputDirectoryName) {
+        this.port = port;
+        this.clientList = clientList;
+        this.consultantList = consultantList;
+        this.outputDirectoryName = outputDirectoryName;
+    }
+
+    /**
+     * Run this server, establishing connections, receiving commands, and
+     * sending them to the CommandProcesser.
+     */
+    public void run() {
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            this.serverSocket = serverSocket;
+            logger.info("InvoiceServer started on: "
+                      + serverSocket.getInetAddress().getHostName() + ":"
+                      + serverSocket.getLocalPort());
+
+            while (!serverSocket.isClosed()) {
+                logger.info("InvoiceServer waiting for connection on port " + port);
+                try (Socket client = serverSocket.accept()) {
+                    serviceConnection(client);
+                } catch (final SocketException sx) {
+                    logger.info("Server socket closed.");
+                }
+            }
+        } catch (final IOException e1) {
+            logger.error("Unable to bind server socket to port " + port);
+        }
+    }
+
+    /**
+     * Read and process commands from the provided socket.
+     * @param client the socket to read from
+     */
+    void serviceConnection(final Socket client) {
+        try {
+            client.shutdownOutput();
+            InputStream is = client.getInputStream();
+
+            ObjectInputStream in = new ObjectInputStream(is);
+            logger.info("Connection made.");
+            final CommandProcessor cmdProc =
+                new CommandProcessor(client, clientList, consultantList, this);
+            cmdProc.setOutPutDirectoryName(outputDirectoryName);
+            while (!client.isClosed()) {
+                final Object obj = in.readObject();
+                if (obj == null) {
+                    client.close();
+                } else if (obj instanceof Command<?>) {
+                    final Command<?> command = (Command<?>)obj;
+                    logger.info("Received command: "
+                              + command.getClass().getSimpleName());
+                    command.setReceiver(cmdProc);
+                    command.execute();
+                } else {
+                    logger.warn(String.format("Received non command object, %s, discarding.",
+                            obj.getClass().getSimpleName()));
+                }
+            }
+        } catch (final IOException ex) {
+            logger.error("IO failure.", ex);
+        } catch (final ClassNotFoundException ex) {
+            logger.error("Unable to resolve read object.", ex);
+        }
+    }
+    
+    /**
+     * Shutdown the server.
+     */
+    void shutdown() {
+        try {
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
+            }
+        } catch (final IOException e) {
+            logger.error("Shutdown unable to close listening socket.", e);
+        }
+    }
 }

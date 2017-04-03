@@ -1,22 +1,25 @@
 package com.scg.net.cmd;
 
 /**
- * @author Neil Nevitt
  * The command to disconnect, this command has no target.
+ *
+ * @author Russ Moul and Neil Nevitt
  */
 @SuppressWarnings("serial")
 public final class DisconnectCommand extends AbstractCommand<Void> {
 
-	/**
-	 * Constructor.
-	 */
-	public DisconnectCommand() {
-		super();
-	}
-	@Override
-	public void execute() {
-		receiver.execute(this);
-		
-	}
+    /**
+     * Construct an DisconnectCommand.
+     */
+    public DisconnectCommand() {
+        super();
+    }
 
+    /**
+     * Execute this Command by calling receiver.execute(this).
+     */
+    @Override
+    public void execute() {
+        getReceiver().execute(this);
+    }
 }

@@ -3,28 +3,27 @@ package com.scg.net.cmd;
 import com.scg.domain.ClientAccount;
 
 /**
- * @author Neil Nevitt
- * The commmand to add a client to a list maintained by the server.
+ * The command to add a Client to a list maintained by the server.
+ *
+ * @author Russ Moul and Neil Nevitt
  */
 @SuppressWarnings("serial")
 public final class AddClientCommand extends AbstractCommand<ClientAccount> {
 
-	
-	
-	/**
-	 * Construct an AddClientCommand with target.
-	 * @param target - The target of this command.
-	 */
-	public AddClientCommand(ClientAccount target) {
-		super(target);
+    /**
+     * Construct an AddClientCommand with a target.
+     *
+     * @param target The target of this Command.
+     */
+    public AddClientCommand(final ClientAccount target) {
+        super(target);
+    }
 
-	}
-
-
-	@Override
-	public void execute() {
-		getReceiver().execute(this);
-		
-	}
-
+    /**
+     * Execute this Command by calling receiver.execute(this).
+     */
+    @Override
+    public void execute() {
+        getReceiver().execute(this);
+    }
 }

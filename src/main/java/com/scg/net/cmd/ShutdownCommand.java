@@ -1,23 +1,26 @@
 package com.scg.net.cmd;
 
 /**
- * @author Neil Nevitt
  * This Command will cause the CommandProcessor to shutdown the server.
+ *
+ * @author Russ Moul and Neil Nevitt
  */
+@SuppressWarnings("serial")
 public final class ShutdownCommand extends AbstractCommand<Void> {
+    /**
+     * Construct an ShutdownCommand.
+     */
+    public ShutdownCommand() {
+        super();
+    }
 
-	/**
-	 * Version Id.
-	 */
-	private static final long serialVersionUID = -5795739421376527482L;
-
-	public ShutdownCommand() {
-		super();
-	}
-	@Override
-	public void execute() {
-		receiver.execute(this); 
-		
-	}
-
+    /**
+     * The method called by the receiver. This method must be implemented by
+     * subclasses to send a reference to themselves to the receiver by calling
+     * receiver.execute(this).
+     */
+    @Override
+    public void execute() {
+        getReceiver().execute(this);
+    }
 }

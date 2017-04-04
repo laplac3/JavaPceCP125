@@ -1,6 +1,7 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.scg.domain.ClientAccount;
@@ -12,15 +13,15 @@ import com.scg.util.ListFactory;
 /**
  * The client application for Assignment08.
  *
- * @author Russ Moul
+ * @author Neil Nevitt
  */
-public final class Assignment08 {
+public final class Assignment09 {
     /** Localhost. */
     private static final String LOCALHOST = "127.0.0.1";
     /**
      * Prevent instantiation.
      */
-    private Assignment08() {
+    private Assignment09() {
     }
 
     /**
@@ -36,12 +37,22 @@ public final class Assignment08 {
         final List<TimeCard> timeCards = new ArrayList<TimeCard>();
         ListFactory.populateLists(accounts, consultants, timeCards);
 
-        final InvoiceClient netClient = new InvoiceClient(LOCALHOST,
-                                                    Assignment08Server.DEFAULT_PORT, timeCards);
-        netClient.run();
+        final List<TimeCard> immutableTimeCard = (List<TimeCard>) Collections.unmodifiableCollection(timeCards);
+        final InvoiceClient netClient1 = new InvoiceClient(LOCALHOST, Assignment09Server.DEFAULT_PORT, immutableTimeCard); 
+        final InvoiceClient netClient2 = new InvoiceClient(LOCALHOST, Assignment09Server.DEFAULT_PORT, immutableTimeCard); 
+        final InvoiceClient netClient3 = new InvoiceClient(LOCALHOST, Assignment09Server.DEFAULT_PORT, immutableTimeCard); 
+        final InvoiceClient netClient4 = new InvoiceClient(LOCALHOST, Assignment09Server.DEFAULT_PORT, immutableTimeCard); //create four different invoice clients
+        netClient1.run();
+        netClient2.run();
+        netClient3.run();
+        netClient4.run();
 
+        netClient1.join();
+        netClient2.join();
+        netClient3.join();
+        netClient4.join();
         // Sent quit command
-        InvoiceClient.sendShutdown(LOCALHOST, Assignment08Server.DEFAULT_PORT);
+        InvoiceClient.sendShutdown(LOCALHOST, Assignment09Server.DEFAULT_PORT);
     }
 
 }

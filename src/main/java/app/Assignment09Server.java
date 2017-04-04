@@ -12,16 +12,16 @@ import com.scg.util.ListFactory;
 /**
  * The server application for assignment 08.
  *
- * @author Russ Moul
+ * @author Neil Nevitt
  */
-public final class Assignment08Server {
+public final class Assignment09Server {
     /** The port for the server to listen on. */
     public static final int DEFAULT_PORT = 10888;
 
     /**
      * Prevent instantiation.
      */
-    private Assignment08Server() {
+    private Assignment09Server() {
     }
 
     /**

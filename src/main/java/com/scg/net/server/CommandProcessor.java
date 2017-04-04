@@ -31,7 +31,7 @@ import com.scg.net.cmd.ShutdownCommand;
  * @author Russ Moul and Neil Nevitt
  */
 
-public class CommandProcessor {
+public class CommandProcessor implements Runnable {
     /** The class' logger. */
     private static final Logger logger =
                          LoggerFactory.getLogger(CommandProcessor.class);
@@ -53,6 +53,8 @@ public class CommandProcessor {
 
     /** The server this command processor is spawned from. */
     private final InvoiceServer server;
+    
+    private final String name;
 
     /**
      * Construct a CommandProcessor.
@@ -65,11 +67,13 @@ public class CommandProcessor {
     public CommandProcessor(final Socket connection,
                             final List<ClientAccount> clientList,
                             final List<Consultant> consultantList,
-                            final InvoiceServer server) {
+                            final InvoiceServer server, 
+                            final String name ) {
         this.clientSocket = connection;
         this.clientList = clientList;
         this.consultantList = consultantList;
         this.server = server;
+        this.name = name;
     }
 
     /**
@@ -87,7 +91,7 @@ public class CommandProcessor {
      * @param command the command to execute.
      */
     public void execute(final AddTimeCardCommand command) {
-        logger.info("Executing add time card command: "  + command);
+        logger.info("Executing add time card command: "  + command , name, command.getTarget().getConsultant().getName());
         timeCardList.add(command.getTarget());
     }
 
@@ -97,8 +101,15 @@ public class CommandProcessor {
      * @param command the command to execute.
      */
     public void execute(final AddClientCommand command) {
-        logger.info("Executing add client command: "  + command);
+        logger.info("Executing add client command: "  + command, name);
         clientList.add(command.getTarget());
+        
+        final ClientAccount newAccount = command.getTarget();
+        synchronized(clientList ) {
+        	if (!clientList.contains(newAccount) ) {
+        		clientList.add(newAccount);
+        	}
+        }
     }
 
     /**
@@ -109,6 +120,7 @@ public class CommandProcessor {
     public void execute(final AddConsultantCommand command) {
         logger.info("Executing add consultant command: "  + command);
         consultantList.add(command.getTarget());
+        //same as the clients
     }
 
     /**
@@ -122,29 +134,32 @@ public class CommandProcessor {
         LocalDate date = command.getTarget();
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMMyyyy");
         final String monthString = formatter.format(date);
-        for (final ClientAccount client : clientList) {
-            invoice = new Invoice(client, date.getMonth(), date.getYear());
-            for (final TimeCard currentTimeCard : timeCardList) {
-                invoice.extractLineItems(currentTimeCard);
-            }
-            if (invoice.getTotalHours() > 0) {
-                final File serverDir = new File(outputDirectoryName);
-                if (!serverDir.exists()) {
-                    if (!serverDir.mkdirs()) {
-                        logger.error("Unable to create directory, " + serverDir.getAbsolutePath());
-                        return;
+        synchronized(clientList ) {
+            for (final ClientAccount client : clientList) {
+                invoice = new Invoice(client, date.getMonth(), date.getYear());
+                for (final TimeCard currentTimeCard : timeCardList) {
+                    invoice.extractLineItems(currentTimeCard);
+                }
+                if (invoice.getTotalHours() > 0) {
+                    final File serverDir = new File(outputDirectoryName);
+                    if (!serverDir.exists()) {
+                        if (!serverDir.mkdirs()) {
+                            logger.error("Unable to create directory, " + serverDir.getAbsolutePath());
+                            return;
+                        }
+                    }
+                    final String outFileName = String.format("%s%sInvoice.txt",
+                                               client.getName().replaceAll(" ", ""),
+                                               monthString);
+                    final File outFile = new File(outputDirectoryName, outFileName);
+                    try (PrintStream printOut = new PrintStream(new FileOutputStream(outFile), true);) {
+                        printOut.println(invoice.toReportString());
+                    } catch (final FileNotFoundException e) {
+                        logger.error("Can't open file " + outFileName, e);
                     }
                 }
-                final String outFileName = String.format("%s%sInvoice.txt",
-                                           client.getName().replaceAll(" ", ""),
-                                           monthString);
-                final File outFile = new File(outputDirectoryName, outFileName);
-                try (PrintStream printOut = new PrintStream(new FileOutputStream(outFile), true);) {
-                    printOut.println(invoice.toReportString());
-                } catch (final FileNotFoundException e) {
-                    logger.error("Can't open file " + outFileName, e);
-                }
             }
+
         }
     }
 
@@ -179,4 +194,15 @@ public class CommandProcessor {
             server.shutdown();
         }
     }
+
+	@Override
+	public void run() {
+//		try {
+//			while(  !clientSocket.isClosed() ) {
+//				final Object obj = in.Read
+//			}
+//		}
+	}	
+		
+	
 }

@@ -55,6 +55,9 @@ public class InvoiceServer {
         this.clientList = clientList;
         this.consultantList = consultantList;
         this.outputDirectoryName = outputDirectoryName;
+        
+        Runtime.getRuntime().addShutdownHook(
+        		new InvoiceServerShutdownHook(clientList, consultantList, outputDirectoryName ));
     }
 
     /**
@@ -62,8 +65,18 @@ public class InvoiceServer {
      * sending them to the CommandProcesser.
      */
     public void run() {
+    	int processorNumber = 0;
+    	while(!serverSocket.isClosed() ) {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             this.serverSocket = serverSocket;
+            processorNumber++;
+            final CommandProcessor commandProcessor = new CommandProcessor( client, "command processor", clientList, consultantList,this);
+            final serverDir = new File(outputDirectoryNamd, Integer.toString(processorNumber));
+            if(serverDir.exist() || serverDir.mkdirs()) {
+            	commandProcessor.setOutPutDirectoryName((serverDir.mkdirs());
+            	final Thread thread = new Thread(commandProcess,"commandProcessor_" + processorNumber);
+            			thread.start();
+            }
             logger.info("InvoiceServer started on: "
                       + serverSocket.getInetAddress().getHostName() + ":"
                       + serverSocket.getLocalPort());
@@ -74,6 +87,8 @@ public class InvoiceServer {
                     serviceConnection(client);
                 } catch (final SocketException sx) {
                     logger.info("Server socket closed.");
+                    
+
                 }
             }
         } catch (final IOException e1) {
@@ -92,13 +107,12 @@ public class InvoiceServer {
 
             ObjectInputStream in = new ObjectInputStream(is);
             logger.info("Connection made.");
-            final CommandProcessor cmdProc =
-                new CommandProcessor(client, clientList, consultantList, this);
+            final CommandProcessor cmdProc = new CommandProcessor(client, clientList, consultantList, this, outputDirectoryName);
             cmdProc.setOutPutDirectoryName(outputDirectoryName);
             while (!client.isClosed()) {
                 final Object obj = in.readObject();
                 if (obj == null) {
-                    client.close();
+                    break;
                 } else if (obj instanceof Command<?>) {
                     final Command<?> command = (Command<?>)obj;
                     logger.info("Received command: "

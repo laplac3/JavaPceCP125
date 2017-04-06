@@ -42,10 +42,10 @@ public final class Assignment09 {
         final InvoiceClient netClient2 = new InvoiceClient(LOCALHOST, Assignment09Server.DEFAULT_PORT, immutableTimeCard); 
         final InvoiceClient netClient3 = new InvoiceClient(LOCALHOST, Assignment09Server.DEFAULT_PORT, immutableTimeCard); 
         final InvoiceClient netClient4 = new InvoiceClient(LOCALHOST, Assignment09Server.DEFAULT_PORT, immutableTimeCard); //create four different invoice clients
-        netClient1.run();
-        netClient2.run();
-        netClient3.run();
-        netClient4.run();
+        netClient1.start();
+        netClient2.start();
+        netClient3.start();
+        netClient4.start();
 
         netClient1.join();
         netClient2.join();

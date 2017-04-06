@@ -1,5 +1,6 @@
 package com.scg.net.server;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -67,32 +68,38 @@ public class InvoiceServer {
     public void run() {
     	int processorNumber = 0;
     	while(!serverSocket.isClosed() ) {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            this.serverSocket = serverSocket;
-            processorNumber++;
-            final CommandProcessor commandProcessor = new CommandProcessor( client, "command processor", clientList, consultantList,this);
-            final serverDir = new File(outputDirectoryNamd, Integer.toString(processorNumber));
-            if(serverDir.exist() || serverDir.mkdirs()) {
-            	commandProcessor.setOutPutDirectoryName((serverDir.mkdirs());
-            	final Thread thread = new Thread(commandProcess,"commandProcessor_" + processorNumber);
-            			thread.start();
-            }
-            logger.info("InvoiceServer started on: "
-                      + serverSocket.getInetAddress().getHostName() + ":"
-                      + serverSocket.getLocalPort());
-
-            while (!serverSocket.isClosed()) {
-                logger.info("InvoiceServer waiting for connection on port " + port);
-                try (Socket client = serverSocket.accept()) {
-                    serviceConnection(client);
-                } catch (final SocketException sx) {
-                    logger.info("Server socket closed.");
-                    
-
+            try /*(ServerSocket serverSocket = new ServerSocket(port)) */ {
+                //this.serverSocket = serverSocket;
+                Socket client = serverSocket.accept();
+                processorNumber++;
+                final CommandProcessor commandProcessor = 
+                		new CommandProcessor( 
+                				client, 
+                				clientList, 
+                				consultantList,this,
+                				"command processor");
+               
+                final File serverDir = 
+                		new File(
+                				outputDirectoryName, 
+                				Integer.toString(processorNumber));
+                
+                if(serverDir.exists() || serverDir.mkdirs()) {
+                	commandProcessor.setOutPutDirectoryName((serverDir.getAbsolutePath()));
+                	final Thread thread = new Thread(commandProcessor,"commandProcessor_" + processorNumber);
+                			thread.start();
                 }
-            }
-        } catch (final IOException e1) {
-            logger.error("Unable to bind server socket to port " + port);
+                
+                logger.info("InvoiceServer started on: "
+                          + serverSocket.getInetAddress().getHostName() + ":"
+                          + serverSocket.getLocalPort());
+
+            } catch ( final SocketException sx ) {
+            	logger.info( "Server socket closed, shutting doown");
+            } catch (final IOException ex) {
+                logger.error("Unable to bind server socket to port " + port);
+            	} 
+
         }
     }
 

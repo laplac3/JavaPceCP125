@@ -38,9 +38,7 @@ public final class Assignment09Server {
         final List<TimeCard> timeCards = new ArrayList<TimeCard>();
         ListFactory.populateLists(accounts, consultants, timeCards);
 
-        final InvoiceServer server = new InvoiceServer(DEFAULT_PORT,
-                                                       accounts, consultants,
-                                                       "target/server");
+        final InvoiceServer server = new InvoiceServer(DEFAULT_PORT, accounts, consultants,"target/server");
         server.run();
     }
 }

@@ -105,7 +105,6 @@ public class CommandProcessor implements Runnable {
      */
     public void execute(final AddClientCommand command) {
         logger.info("Executing add client command: "  + command, name);
-        clientList.add(command.getTarget());
         
         final ClientAccount newAccount = command.getTarget();
         synchronized(clientList ) {
@@ -122,7 +121,11 @@ public class CommandProcessor implements Runnable {
      */
     public void execute(final AddConsultantCommand command) {
         logger.info("Executing add consultant command: "  + command);
-        consultantList.add(command.getTarget());
+        final Consultant newConsultant = command.getTarget();
+        synchronized(consultantList) {
+        	if (!consultantList.contains(newConsultant))
+        		consultantList.add(command.getTarget());
+        }
         //same as the clients
     }
 
@@ -237,7 +240,7 @@ public class CommandProcessor implements Runnable {
 		} catch ( IOException e ) {
 			logger.error("Failure to close connection.",e);
 		} 
-		}
+	}
 	}
 		
 	

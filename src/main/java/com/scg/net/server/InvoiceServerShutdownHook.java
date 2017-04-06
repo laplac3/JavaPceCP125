@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.scg.domain.ClientAccount;
 import com.scg.domain.Consultant;
 
@@ -13,8 +16,14 @@ import com.scg.domain.Consultant;
  * @author Neil Nevitt.
  * ShutdownHook for the InvoiceServer.
  */
-public class InvoiceServerShutdownHook extends Thread implements Runnable {
+public class InvoiceServerShutdownHook extends Thread {
 
+	private static final Logger log = LoggerFactory.getLogger(InvoiceServerShutdownHook.class);
+	
+	private static final int SHUTDOWN_DELAY_SECONDS = 5;
+	
+	private static final int ONE_SECOND = 1000;
+	
 	private List<ClientAccount> clientList;
 	private List<Consultant> consultantList;
 	private String outputDirectoryName;
@@ -28,6 +37,9 @@ public class InvoiceServerShutdownHook extends Thread implements Runnable {
 	public InvoiceServerShutdownHook(List<ClientAccount> clientList,
 			List<Consultant> consultantList,
 			String outputDirectoryName) {
+		this.clientList = clientList;
+		this.consultantList = consultantList;
+		this.outputDirectoryName = outputDirectoryName;
 		
 	}
 	
@@ -51,11 +63,20 @@ public class InvoiceServerShutdownHook extends Thread implements Runnable {
 					}
 				}
 				
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (FileNotFoundException fnfe ) {
+				log.error("Unable to make the output directory", fnfe);
 			}
-					
+			System.err.println("STARTING TO SHUTDOWN");
+			System.err.println(String.format("Shutting down after %d seconds", SHUTDOWN_DELAY_SECONDS ));
+			for (int i = SHUTDOWN_DELAY_SECONDS; i>0; i--) {
+				try {
+					Thread.sleep(ONE_SECOND);
+					System.err.println(String.format("Shutdown in %d seconds", i));
+				} catch (final InterruptedException e ) {
+					log.info("Shuttdown delay interrupted.");
+				}
+				System.err.println("SHUTDOWN!");
+			}
 		}
 	}
 

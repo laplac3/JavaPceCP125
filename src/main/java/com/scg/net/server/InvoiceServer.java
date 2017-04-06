@@ -48,14 +48,21 @@ public class InvoiceServer {
      * @param clientList the initial list of clients
      * @param consultantList the initial list of consultants
      * @param outputDirectoryName the directory to be used for files output by commands
+     * @throws IOException 
      */
     public InvoiceServer(final int port, final List<ClientAccount> clientList,
                          final List<Consultant> consultantList,
-                         final String outputDirectoryName) {
+                         final String outputDirectoryName) throws IOException {
         this.port = port;
         this.clientList = clientList;
         this.consultantList = consultantList;
         this.outputDirectoryName = outputDirectoryName;
+
+        ServerSocket serverSocket = new ServerSocket(port);
+        this.serverSocket = serverSocket;
+        logger.info("InvoiceServer started on: "
+    			+ serverSocket.getInetAddress().getHostName() +
+    			serverSocket.getLocalPort());
         
         Runtime.getRuntime().addShutdownHook(
         		new InvoiceServerShutdownHook(clientList, consultantList, outputDirectoryName ));
@@ -68,8 +75,9 @@ public class InvoiceServer {
     public void run() {
     	int processorNumber = 0;
     	while(!serverSocket.isClosed() ) {
-            try /*(ServerSocket serverSocket = new ServerSocket(port)) */ {
-                //this.serverSocket = serverSocket;
+            try {
+                
+            	logger.info("InvoiceSever waiting for connection");
                 Socket client = serverSocket.accept();
                 processorNumber++;
                 final CommandProcessor commandProcessor = 
@@ -88,11 +96,10 @@ public class InvoiceServer {
                 	commandProcessor.setOutPutDirectoryName((serverDir.getAbsolutePath()));
                 	final Thread thread = new Thread(commandProcessor,"commandProcessor_" + processorNumber);
                 			thread.start();
+                } else {
+                	logger.error("Unable to create output directory, " + serverDir.getAbsolutePath());
                 }
                 
-                logger.info("InvoiceServer started on: "
-                          + serverSocket.getInetAddress().getHostName() + ":"
-                          + serverSocket.getLocalPort());
 
             } catch ( final SocketException sx ) {
             	logger.info( "Server socket closed, shutting doown");
@@ -103,41 +110,7 @@ public class InvoiceServer {
         }
     }
 
-    /**
-     * Read and process commands from the provided socket.
-     * @param client the socket to read from
-     */
-    void serviceConnection(final Socket client) {
-        try {
-            client.shutdownOutput();
-            InputStream is = client.getInputStream();
-
-            ObjectInputStream in = new ObjectInputStream(is);
-            logger.info("Connection made.");
-            final CommandProcessor cmdProc = new CommandProcessor(client, clientList, consultantList, this, outputDirectoryName);
-            cmdProc.setOutPutDirectoryName(outputDirectoryName);
-            while (!client.isClosed()) {
-                final Object obj = in.readObject();
-                if (obj == null) {
-                    break;
-                } else if (obj instanceof Command<?>) {
-                    final Command<?> command = (Command<?>)obj;
-                    logger.info("Received command: "
-                              + command.getClass().getSimpleName());
-                    command.setReceiver(cmdProc);
-                    command.execute();
-                } else {
-                    logger.warn(String.format("Received non command object, %s, discarding.",
-                            obj.getClass().getSimpleName()));
-                }
-            }
-        } catch (final IOException ex) {
-            logger.error("IO failure.", ex);
-        } catch (final ClassNotFoundException ex) {
-            logger.error("Unable to resolve read object.", ex);
-        }
-    }
-    
+  
     /**
      * Shutdown the server.
      */

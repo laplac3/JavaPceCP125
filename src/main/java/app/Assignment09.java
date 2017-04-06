@@ -1,5 +1,7 @@
 package app;
 
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +39,7 @@ public final class Assignment09 {
         final List<TimeCard> timeCards = new ArrayList<TimeCard>();
         ListFactory.populateLists(accounts, consultants, timeCards);
 
-        final List<TimeCard> immutableTimeCard = (List<TimeCard>) Collections.unmodifiableCollection(timeCards);
+        final List<TimeCard> immutableTimeCard = Collections.unmodifiableList(timeCards);
         final InvoiceClient netClient1 = new InvoiceClient(LOCALHOST, Assignment09Server.DEFAULT_PORT, immutableTimeCard); 
         final InvoiceClient netClient2 = new InvoiceClient(LOCALHOST, Assignment09Server.DEFAULT_PORT, immutableTimeCard); 
         final InvoiceClient netClient3 = new InvoiceClient(LOCALHOST, Assignment09Server.DEFAULT_PORT, immutableTimeCard); 

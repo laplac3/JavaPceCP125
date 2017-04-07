@@ -96,7 +96,8 @@ public class InvoiceServer {
                 
                 if(serverDir.exists() || serverDir.mkdirs()) {
                 	commandProcessor.setOutPutDirectoryName((serverDir.getAbsolutePath()));
-                	final Thread thread = new Thread(commandProcessor,"commandProcessor_" + processorNumber);
+                	final Thread thread = new Thread(commandProcessor,
+                			"commandProcessor_" + processorNumber);
                 			thread.start();
                 } else {
                 	logger.error("Unable to create output directory, " + serverDir.getAbsolutePath());

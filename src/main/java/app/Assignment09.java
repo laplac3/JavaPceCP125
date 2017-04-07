@@ -53,6 +53,7 @@ public final class Assignment09 {
         netClient2.join();
         netClient3.join();
         netClient4.join();
+        
         // Sent quit command
         InvoiceClient.sendShutdown(LOCALHOST, Assignment09Server.DEFAULT_PORT);
     }

@@ -104,12 +104,12 @@ public class CommandProcessor implements Runnable {
      * @param command the command to execute.
      */
     public void execute(final AddClientCommand command) {
-        logger.info("Executing add client command: "  + command, name);
+        logger.info("Executing add client command: "  + command, name, command.getTarget());
         
         final ClientAccount newAccount = command.getTarget();
         synchronized(clientList ) {
         	if (!clientList.contains(newAccount) ) {
-        		clientList.add(newAccount);
+        		clientList.add(command.getTarget());
         	}
         }
     }

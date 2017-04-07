@@ -82,8 +82,8 @@ public final class InvoiceClient extends Thread {
             out.writeObject("NOT_A_COMMAND");
             sendTimeCards(out);
             createInvoices(out, INVOICE_MONTH, INVOICE_YEAR);
-     //       sendDisconnect(out, server);
-     //       sendShutdown(host, port);
+//            sendDisconnect(out, server);
+//            sendShutdown(host, port);
             server.shutdownOutput();
         } catch (final IOException ex) {
             logger.error("Unable to connect to server.", ex);

@@ -68,10 +68,10 @@ public class CommandProcessor implements Runnable {
      * @param server the server that created this command processor
      */
     public CommandProcessor(final Socket connection,
+    						final String name,
                             final List<ClientAccount> clientList,
                             final List<Consultant> consultantList,
-                            final InvoiceServer server, 
-                            final String name ) {
+                            final InvoiceServer server) {
         this.clientSocket = connection;
         this.clientList = clientList;
         this.consultantList = consultantList;
@@ -142,7 +142,8 @@ public class CommandProcessor implements Runnable {
         final String monthString = formatter.format(date);
         synchronized(clientList ) {
             for (final ClientAccount client : clientList) {
-                invoice = new Invoice(client, date.getMonth(), date.getYear());
+                invoice = new Invoice(client,
+                		date.getMonth(), date.getYear());
                 for (final TimeCard currentTimeCard : timeCardList) {
                     invoice.extractLineItems(currentTimeCard);
                 }
@@ -205,7 +206,7 @@ public class CommandProcessor implements Runnable {
 	public void run() {
 	ObjectInputStream in = null;
 	try {
-		clientSocket.shutdownInput();
+		//clientSocket.shutdownInput();
 		InputStream is = clientSocket.getInputStream();
 		
 		in = new ObjectInputStream(is);
@@ -214,7 +215,7 @@ public class CommandProcessor implements Runnable {
 		try {
 			while ( !clientSocket.isClosed()) {
 				final Object obj = in.readObject();
-				if (obj == null ) {
+				if ( obj == null ) {
 					break;
 				} else if (obj instanceof Command<?> ) {
 					final Command<?> command = (Command<?>)obj;
@@ -229,19 +230,20 @@ public class CommandProcessor implements Runnable {
 			logger.error("Could not read command",ioe);
 		} catch (final ClassNotFoundException cnf ) {
 			logger.error("Command of uknown type, cannot read ", cnf);
-		}
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} finally {
+		}  finally {
 		try {
 			in.close();
 			clientSocket.close();
 		} catch ( IOException e ) {
 			logger.error("Failure to close connection.",e);
-		} 
-	}
-	}
+		
+		}
+			
+	}  
 		
 	
+	} catch ( IOException e ) {
+		logger.error("IO failere", e);
+	}
+	}
 }

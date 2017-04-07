@@ -29,7 +29,7 @@ import com.scg.util.StateCode;
  *
  * @author Russ Moul and Neil Nevitt
  */
-public final class InvoiceClient extends Thread implements Runnable {
+public final class InvoiceClient extends Thread {
     /** This class' logger. */
     private static final Logger logger =
                          LoggerFactory.getLogger(InvoiceClient.class);
@@ -82,8 +82,9 @@ public final class InvoiceClient extends Thread implements Runnable {
             out.writeObject("NOT_A_COMMAND");
             sendTimeCards(out);
             createInvoices(out, INVOICE_MONTH, INVOICE_YEAR);
-            sendDisconnect(out, server);
-     //       server.shutdownOutput();
+     //       sendDisconnect(out, server);
+     //       sendShutdown(host, port);
+            server.shutdownOutput();
         } catch (final IOException ex) {
             logger.error("Unable to connect to server.", ex);
         }

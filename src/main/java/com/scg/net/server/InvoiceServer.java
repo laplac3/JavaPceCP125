@@ -58,8 +58,8 @@ public class InvoiceServer {
         this.consultantList = consultantList;
         this.outputDirectoryName = outputDirectoryName;
 
-        ServerSocket serverSocket = new ServerSocket(port);
-        this.serverSocket = serverSocket;
+        
+        this.serverSocket  = new ServerSocket(port);
         logger.info("InvoiceServer started on: "
     			+ serverSocket.getInetAddress().getHostName() +
     			serverSocket.getLocalPort());
@@ -78,14 +78,16 @@ public class InvoiceServer {
             try {
                 
             	logger.info("InvoiceSever waiting for connection");
+            	if ( serverSocket.accept() != null && !serverSocket.isClosed())
+            		processorNumber++;
                 Socket client = serverSocket.accept();
-                processorNumber++;
+                
                 final CommandProcessor commandProcessor = 
                 		new CommandProcessor( 
                 				client, 
+                				"command processor" + processorNumber,
                 				clientList, 
-                				consultantList,this,
-                				"command processor");
+                				consultantList,this);
                
                 final File serverDir = 
                 		new File(
